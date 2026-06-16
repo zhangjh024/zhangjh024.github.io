@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getPostUrl } from "@/utils/getPostPaths";
+
+type Props = {
+  posts: CollectionEntry<"posts">[];
+};
+
+const { posts } = Astro.props;
+
+// 按年份分组（posts 传入时已按时间倒序排好）
+const byYear = new Map<number, CollectionEntry<"posts">[]>();
+for (const post of posts) {
+  const year = post.data.pubDatetime.getFullYear();
+  const arr = byYear.get(year);
+  if (arr) arr.push(post);
+  else byYear.set(year, [post]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+// 月/日，例如 06/16
+const monthDay = (d: Date) =>
+  `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+---
+
+<nav aria-label="文章时间线" class="text-sm">
+  <h2 class="mb-4 text-base font-semibold tracking-wide">时间线</h2>
+  {
+    posts.length === 0 ? (
+      <p class="text-muted-foreground text-xs">还没有文章</p>
+    ) : (
+      <div class="border-border/60 ms-1 border-s ps-5">
+        {years.map(year => (
+          <div class="mb-5">
+            <div class="text-muted-foreground mb-2 text-xs font-bold">
+              {year}
+            </div>
+            <ul class="space-y-2.5">
+              {byYear.get(year)!.map(post => (
+                <li class="relative">
+                  <span class="bg-accent absolute -start-[1.45rem] top-1.5 size-1.5 rounded-full" />
+                  <a
+                    href={getPostUrl(
+                      post.id,
+                      post.filePath,
+                      Astro.currentLocale
+                    )}
+                    class="hover:text-accent block leading-snug transition-colors"
+                  >
+                    <span class="text-muted-foreground me-1.5 text-xs tabular-nums">
+                      {monthDay(post.data.pubDatetime)}
+                    </span>
+                    {post.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    )
+  }
+</nav>

@@ -8,6 +8,7 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
+import Timeline from "@/components/Timeline.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
@@ -27,12 +28,19 @@ const homePath = getRelativeLocaleUrl(locale, "");
 
 <Layout>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout"
+  <div
+    class="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 md:flex-row md:items-start md:gap-10"
   >
+    <aside class="hidden shrink-0 md:sticky md:top-20 md:block md:w-52">
+      <Timeline posts={sortedPosts} />
+    </aside>
+
+    <main
+      id="main-content"
+      data-layout="index"
+      data-home-path={homePath}
+      class="min-w-0 flex-1"
+    >
     <section id="hero" class="border-border border-b pt-8 pb-6">
       <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
         你好，我是 Jinghao 👋
@@ -119,7 +127,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
     </div>
-  </main>
+    </main>
+  </div>
   <Footer />
 </Layout>
 
