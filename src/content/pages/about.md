@@ -1,37 +1,25 @@
 ---
 title: "About"
-description: "A bit about me and this blog."
+description: "关于我和这个博客"
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+你好，我是 **Jinghao** 👋
 
-![Astro Paper](@/assets/images/astropaper-og.jpg)
+一个还在路上的技术学习者，先后在 **去哪儿**、**迅雷** 做技术。平时写前端，也喜欢用 Web 把有意思的想法做出来 —— 在线图像编辑、小游戏、WebGPU 之类的小玩意儿都折腾过。
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+业余对深度学习挺着迷，尤其是**多模态情感分析**方向，GitHub 上有一些相关的复现和实验，最近也在玩 LLM 应用。
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+## 我感兴趣的
 
-## Features
+- 🖥️ **前端 / 图形**：Vue、React、Canvas、WebGPU
+- 🤖 **AI**：多模态情感分析、LLM 应用
+- 🧩 **开源**：把学到的东西做成 demo 丢上 GitHub
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+## 这个博客
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+记录技术笔记、项目复盘和日常思考 —— 保持学习，写给未来的自己，也希望对路过的你有用。
 
-and so much more.
+## 找我
 
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+- GitHub · [@zhangjh024](https://github.com/zhangjh024)
+- Email · your-email@example.com
