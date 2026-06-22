@@ -1,0 +1,398 @@
+---
+/**
+ * 《10x Programmer：不是以一当十，是十倍速》的定制设计页。
+ *
+ * 内容文案取自 src/content/posts/10x-programmer.md，这里用手写前端结构
+ * 重新呈现，追求设计感。文章的 SEO / 列表 / RSS / OG 仍走 md frontmatter。
+ *
+ * 由 [...slug]/index.astro 的「slug → 定制组件」注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 标题拆主 / 副：「10x Programmer」+「不是以一当十，是十倍速」
+const [titleMain, titleSub] = title.split("：");
+
+// 粗略阅读时长（中文约 400 字/分钟）
+const charCount = (post.body ?? "").replace(/\s+/g, "").length;
+const readingMinutes = Math.max(1, Math.round(charCount / 400));
+---
+
+<main id="main-content" data-pagefind-body class="post-10x mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header class="app-layout relative isolate pt-6 pb-10 sm:pt-10 sm:pb-14">
+      <span aria-hidden="true" class="deco-10x select-none">10&times;</span>
+
+      <p class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase">
+        Essay · 成长
+      </p>
+
+      <h1
+        class="reveal mt-3 text-4xl leading-tight font-bold sm:text-6xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        <span class="block">{titleMain}</span>
+        {
+          titleSub && (
+            <span class="text-muted-foreground mt-2 block text-xl font-normal sm:text-2xl">
+              {titleSub}
+            </span>
+          )
+        }
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span aria-hidden="true">·</span>
+        <span>约 {readingMinutes} 分钟</span>
+      </div>
+
+      {/* 时间分配可视化：1/10 工作，9/10 生活 */}
+      <figure
+        class="reveal mt-8"
+        style={{ "--d": "0.15s" }}
+        aria-label="时间分配：1/10 用来把工作做完，9/10 留给生活、爱好和未来"
+      >
+        <div
+          class="border-border flex h-20 w-full overflow-hidden rounded-xl border sm:h-24"
+        >
+          <div
+            class="bg-accent text-accent-foreground flex flex-[1] flex-col items-center justify-center px-1 text-center"
+          >
+            <span class="text-base font-bold sm:text-lg">1/10</span>
+            <span class="mt-0.5 text-[10px] opacity-90 sm:text-xs">工作</span>
+          </div>
+          <div
+            class="time-rest text-muted-foreground flex flex-[9] flex-col items-center justify-center text-center"
+          >
+            <span class="text-foreground text-base font-bold sm:text-lg">
+              9/10
+            </span>
+            <span class="mt-0.5 text-[11px] sm:text-sm">
+              生活 · 爱好 · 未来
+            </span>
+          </div>
+        </div>
+      </figure>
+    </header>
+
+    {/* ===== 正文 ===== */}
+    <div class="app-layout post-body space-y-6 pb-4 text-lg leading-relaxed">
+      <p class="reveal">
+        最近看到一个词，感悟很深 ——
+        <strong class="text-foreground font-semibold">10x Programmer</strong>。
+      </p>
+
+      <p class="reveal">
+        直译是「以一当十的程序员」，会用 <b class="num">1/10</b>
+        的时间把该做的工作做完，然后把剩下的 <b class="num">9/10</b>
+        时间，留给生活、爱好和未来。
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        它衡量的不是你产出了多少，<br class="hidden sm:block" />
+        而是你为自己赎回了多少时间。
+      </blockquote>
+
+      {/* ----- 章节 01 ----- */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">01</span>
+        先做生活的主人
+      </h2>
+
+      <p class="reveal">
+        要做到十倍速，技术熟练是前提，但我觉得更底层的一条是：<strong
+          class="text-foreground font-semibold">先做生活的主人。</strong
+        >
+      </p>
+
+      <aside class="story-card reveal">
+        <span class="story-badge">那天晚上</span>
+        <p>
+          6.21，老尼、猎鹰夺冠科隆 Major，我看比赛看到晚上 3 点，激动到 4
+          点还睡不着觉。
+        </p>
+        <p>第二天上班，简直是生不如死，头疼 + 心脏疼，感觉要去见张雪峰了。</p>
+        <p class="text-muted-foreground">一天基本上都废了，很难受。</p>
+      </aside>
+
+      <p class="reveal">
+        一个作息混乱、被各种事推着走的人，很难在工作里进入真正高效的状态。所谓规律生活，不是什么自律口号，落到实处其实很朴素：
+      </p>
+
+      <ul class="rule-list reveal">
+        <li>
+          <span class="rule-no">1</span>
+          <span>该睡的时候睡，让第二天有清醒的头脑；</span>
+        </li>
+        <li>
+          <span class="rule-no">2</span>
+          <span>把精力花在真正重要的事上，而不是被消息和杂事牵着跑；</span>
+        </li>
+        <li>
+          <span class="rule-no">3</span>
+          <span>留出固定的、不被打扰的深度工作时间。</span>
+        </li>
+      </ul>
+
+      <p class="reveal">
+        规律本身不直接产生价值，但它是高效的地基。先把生活过得有秩序，工作上的「十倍速」才有可能发生
+        —— 否则省下来的时间，也只会被新的忙乱重新填满。
+      </p>
+
+      {/* ----- 章节 02 ----- */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>
+        一年的爆发力
+      </h2>
+
+      <blockquote class="pull-quote reveal">
+        五年的专注，可以换来一生的自由。
+      </blockquote>
+
+      <p class="reveal">
+        放到今天，给它加一个变量 ——
+        <strong class="text-accent font-semibold">AI。</strong>
+      </p>
+
+      <p class="reveal">
+        这一波 AI 带来的是难得的机会窗口。工具的能力在<b class="num"
+          >以周为单位</b
+        >往前跳，一个人能撬动的事情，比几年前大了一个量级。在这样的窗口里，五年也许太久。我更想用<strong
+          class="text-foreground font-semibold">一年专注的爆发力</strong
+        >去做：把五年的专注密度，压进一年里，趁窗口还开着，全力以赴一次。
+      </p>
+
+      {/* ----- 写在最后 ----- */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">03</span>
+        写在最后
+      </h2>
+
+      <p class="reveal">两句话，一个关于时间，一个关于专注：</p>
+
+      <div class="reveal grid gap-4 sm:grid-cols-2">
+        <div class="closing-card">
+          <span class="closing-label">关于时间</span>
+          <p>做十倍速的程序员，把省下的时间还给生活。</p>
+        </div>
+        <div class="closing-card">
+          <span class="closing-label">关于专注</span>
+          <p>用一年的爆发力，去搏一个想要的未来。</p>
+        </div>
+      </div>
+
+      <p class="reveal regards">共勉。</p>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* hero 角落的超大装饰字，弱化为背景层 */
+  .deco-10x {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-end: 0;
+    z-index: -1;
+    font-weight: 700;
+    font-size: clamp(5rem, 22vw, 11rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  /* 时间条右侧 9/10 区：淡色斜纹，呼应「留白」 */
+  .time-rest {
+    background-color: color-mix(in srgb, var(--muted) 45%, transparent);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--muted-foreground) 12%, transparent) 0,
+      color-mix(in srgb, var(--muted-foreground) 12%, transparent) 1px,
+      transparent 1px,
+      transparent 11px
+    );
+  }
+
+  /* 行内数字强调（1/10、9/10、以周为单位） */
+  .post-body :global(.num) {
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 金句强调块 */
+  .pull-quote {
+    margin-block: 0.5rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.35rem, 4vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--foreground);
+  }
+
+  /* 章节标题 */
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 2.75rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter-no {
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* 个人故事卡片 —— 像一段旁白 */
+  .story-card {
+    position: relative;
+    margin-block: 0.5rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 35%, transparent);
+    font-size: 1rem;
+  }
+  .story-card p + p {
+    margin-top: 0.6rem;
+  }
+  .story-badge {
+    display: inline-block;
+    margin-bottom: 0.7rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* 规律三条 */
+  .rule-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .rule-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .rule-list li:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+  .rule-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  /* 结尾双卡 */
+  .closing-card {
+    padding: 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+    transition: border-color 0.2s ease;
+  }
+  .closing-card:hover {
+    border-color: var(--accent);
+  }
+  .closing-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .closing-card p {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  .regards {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+  }
+
+  /* 入场动画 —— 仅在用户不偏好减少动效时启用，避免内容初始不可见的风险 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
