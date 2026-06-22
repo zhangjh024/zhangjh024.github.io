@@ -1,5 +1,5 @@
 ---
-title: "6.21 日的一些反思和思考"
+title: "6.21 的一些反思和思考"
 pubDatetime: 2026-06-22T09:00:00+08:00
 description: 10x Programmer 不是一个人干十个人的活，而是用 1/10 的时间做完，把剩下的时间还给生活。再聊聊为什么我更相信一年专注的爆发力。
 tags: [essay, growth]
