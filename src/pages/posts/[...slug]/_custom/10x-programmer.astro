@@ -1,6 +1,6 @@
 ---
 /**
- * 《10x Programmer：不是以一当十，是十倍速》的定制设计页。
+ * 《6.21 日的一些反思和思考》的定制设计页（slug 仍为 10x-programmer）。
  *
  * 内容文案取自 src/content/posts/10x-programmer.md，这里用手写前端结构
  * 重新呈现，追求设计感。文章的 SEO / 列表 / RSS / OG 仍走 md frontmatter。
@@ -30,9 +30,6 @@ type Props = {
 const { post, prevPost, nextPost } = Astro.props;
 const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
 
-// 标题拆主 / 副：「10x Programmer」+「不是以一当十，是十倍速」
-const [titleMain, titleSub] = title.split("：");
-
 // 粗略阅读时长（中文约 400 字/分钟）
 const charCount = (post.body ?? "").replace(/\s+/g, "").length;
 const readingMinutes = Math.max(1, Math.round(charCount / 400));
@@ -41,25 +38,18 @@ const readingMinutes = Math.max(1, Math.round(charCount / 400));
 <main id="main-content" data-pagefind-body class="post-10x mt-6 sm:mt-8">
   <article>
     {/* ===== Hero ===== */}
-    <header class="app-layout relative isolate pt-6 pb-10 sm:pt-10 sm:pb-14">
-      <span aria-hidden="true" class="deco-10x select-none">10&times;</span>
+    <header class="app-layout relative isolate overflow-hidden pt-6 pb-10 sm:pt-10 sm:pb-14">
+      <span aria-hidden="true" class="deco-date select-none">6.21</span>
 
       <p class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase">
-        Essay · 成长
+        Reflection · 随笔
       </p>
 
       <h1
-        class="reveal mt-3 text-4xl leading-tight font-bold sm:text-6xl"
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
         style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
       >
-        <span class="block">{titleMain}</span>
-        {
-          titleSub && (
-            <span class="text-muted-foreground mt-2 block text-xl font-normal sm:text-2xl">
-              {titleSub}
-            </span>
-          )
-        }
+        {title}
       </h1>
 
       <div
@@ -228,13 +218,13 @@ const readingMinutes = Math.max(1, Math.round(charCount / 400));
 
 <style>
   /* hero 角落的超大装饰字，弱化为背景层 */
-  .deco-10x {
+  .deco-date {
     position: absolute;
     top: -0.5rem;
     inset-inline-end: 0;
     z-index: -1;
     font-weight: 700;
-    font-size: clamp(5rem, 22vw, 11rem);
+    font-size: clamp(3.5rem, 15vw, 8rem);
     line-height: 1;
     color: var(--accent);
     opacity: 0.08;
