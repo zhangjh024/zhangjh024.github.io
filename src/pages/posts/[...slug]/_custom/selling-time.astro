@@ -1,0 +1,586 @@
+---
+/**
+ * 《agent岗位要求》的定制设计页（slug 为 selling-time）。
+ *
+ * 内容文案取自 src/content/posts/selling-time.md，这里用手写前端结构
+ * 重新呈现：技术栈做成 chip、岗位与 JD 做成卡片、金句强调、章节编号。
+ * 文章的 SEO / 列表 / RSS / OG 仍走 md frontmatter。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+const charCount = (post.body ?? "").replace(/\s+/g, "").length;
+const readingMinutes = Math.max(1, Math.round(charCount / 400));
+
+const geoUrl = "https://x.com/ai_xiaomu/status/2068613828687085699";
+
+// 技术栈
+const stacks = [
+  {
+    label: "Web 技术栈",
+    items: [
+      "React",
+      "TanStack Start",
+      "Vite",
+      "TypeScript",
+      "shadcn/ui",
+      "Base UI",
+      "Tailwind CSS",
+      "better-auth",
+      "Vercel AI SDK",
+      "oxfmt / oxlint",
+    ],
+  },
+  { label: "后端统一", items: ["Hono", "Cloudflare Workers"] },
+  { label: "Web 调试", items: ["Chrome DevTools MCP", "Codex Chrome 插件"] },
+  {
+    label: "移动端技术栈",
+    items: [
+      "React Native",
+      "Expo",
+      "Expo Router",
+      "NativeWind",
+      "React Native Reusables",
+      "Reanimated",
+      "Gesture Handler",
+      "EAS Build / Submit / Update",
+    ],
+  },
+];
+
+// CREAO 三个岗位
+const creaoRoles = [
+  {
+    no: "01",
+    title: "Agent Product Engineer（Full-stack）",
+    paras: [
+      "在大多数公司，工程师负责实现产品需求。在 CREAO，Agent Product Engineer 直接定义产品。",
+      "我们没有传统的产品经理岗，也不会把一份写好的需求文档交给你。你需要理解用户问题，判断什么值得做，完成功能设计并上线，再根据真实反馈持续迭代。",
+      "你会负责 CREAO 智能体最核心的产品体验，包括智能体的创建、配置、执行、记忆、工具调用、定时运行、人工审核和效果评估，也会横跨前端、后端、接口、数据流、系统集成与智能体执行逻辑。",
+      "这个岗位既需要扎实的全栈工程能力，也需要很强的产品判断。你需要能在信息不完整的情况下做出高质量决策，知道什么时候应该快速推进，什么时候工程质量、可维护性和用户信任不能让步。",
+    ],
+  },
+  {
+    no: "02",
+    title: "Forward Deployed Engineer",
+    paras: [
+      "Agent 在产品里跑通，只是一切的开始。Forward Deployed Engineer 要做的，是让它进入真实且复杂的商业环境，并在生产系统中稳定运行。",
+      "客户的真实系统往往复杂且混。你需要进入这些复杂度，抽丝剥茧地梳理业务流程、系统约束和成功标准，最终交付能够稳定运行的智能体解决方案。",
+      "你既要能和工程团队讨论系统架构，也要让业务负责人理解产品最终能够带来的价值。",
+      "我们会重点关注拥有 3 年以上企业客户一线技术岗位经验的人，例如解决方案工程师、实施工程师或技术顾问。你需要具备很强的工程能力，也擅长识别并弥合 CREAO 产品能力与企业客户实际问题之间的差距。",
+      "这个岗位带来的是 CREAO 最快的产品反馈回路之一。",
+    ],
+  },
+  {
+    no: "03",
+    title: "Product Marketing and Technical Growth",
+    paras: [
+      "现在大多数 AI 产品的市场表达听起来都一样：自动化、效率、工作流。内容写的太泛，最后谁也转化不了。",
+      "我们需要有人真正理解 CREAO 正在构建的 cloud agent harness 层，再建立一套能够获得 founder、builder、operator 和 developer 注意力的叙事与增长系统。",
+      "这个岗位会负责 CREAO 的市场定位和产品表达，覆盖用户获取、激活、留存、推荐和商业化，也会参与新用户引导、模板、使用场景、产品发布、销售材料、竞品与市场情报，以及用户行为分析。",
+      "这远远不止是写内容。你需要真正看懂产品，能和工程团队讨论技术边界，也能从激活率、转化率和留存率中分辨真实的增长信号与虚假指标。",
+      "有工程背景会是很强的加分项。曾经做过工程师、创业者或技术型业务负责人，之后转向增长；或者拥有 AI、开发者工具、效率工具、自动化、企业软件和产品驱动增长相关经验，都会非常匹配。",
+    ],
+  },
+];
+
+const creaoClosing = [
+  "我们极其看重人才密度，因为最优秀的人，只愿意和同一水平的人共事。",
+  "但我们不会用职级和简历关键词来定义人才。我们更想看到的是，你是否真正走完过从问题判断、产品或技术方案、交付到反馈闭环的全过程；你能不能讲清楚自己做了什么、为什么重要、哪里判断错了，以及最后如何完成迭代。",
+  "在 CREAO，每个人都会得到充分的信任、资源和支持，也需要对自己的判断与最终结果负责。我们一起在这个高度波动的时代背景下一起去创造财富。",
+  "我们会一起探索这个市场，挖出真正有价值的机会，做其他人不敢做、做不了，或者还没有看懂的事。",
+];
+
+// DeepSeek Harness JD
+const jdGroups = [
+  {
+    label: "主要职责",
+    items: [
+      "参与设计 DeepSeek 的 Harness 产品的技术架构与选型。",
+      "参与开发 DeepSeek 的 Harness 产品。",
+      "与研究员紧密合作，共同定义和实现 Harness 领域的前沿创新。",
+      "与模型训练团队的工程师与研究员深度沟通与合作，参与实现模型与 Harness 的共同进化，从 Harness 的角度实现 DeepSeek 的 Harness 与模型的深度适配。",
+      "以内部真实任务做为 Harness 产品和模型相关能力训练的重要反馈源，持续迭代产品能力。",
+      "理解并分析团队收集到的用户反馈。在有兴趣且力所能及的前提下，协助维护 Harness 产品用户社群。",
+      "协助项目管理相关工作。",
+    ],
+  },
+  {
+    label: "任职要求",
+    items: [
+      "技术水平过硬，技术眼界广阔。",
+      "知名高校本科学历及以上。",
+      "熟练使用 AI Agent 工具进行软件开发。在软件开发领域具有极强的学习能力。能够在 AI 辅助下，在没有直接经验的领域（如语言、技术、框架等）进行有质量保证的编程工作。",
+      "是 Agent 产品的高强度用户，对 Agent Harness 的开发有极大的热情，对模型行为有品味有判断力，对开发者体验有强感知。深度使用过代码类及通用类 Agent 产品，并将相关产品的使用融入到自己的工作和生活中。",
+      "熟悉 LLM 以及 Agent 基本机制及其技术原理，包括 LLM API、KV Cache、Agent Loop、Tool Use、Reasoning、Planning、Skills、MCP、Memory、Subagent、Multi-Agent 等相关知识。对 Prompt Engineering、Context Engineering、Harness Engineering 等课题有较深入的了解。",
+      "良好的中文沟通能力。",
+    ],
+  },
+  {
+    label: "加分项",
+    items: [
+      "AI 行业相关软件开发经验。",
+      "作为小团队中的研发工程师快速迭代产品的经验。",
+      "个人开源作品及开源社区的深度贡献。",
+      "与研究员深度协作的经验或科研经验，有科研品味。",
+      "能用英文与开源社区、用户社群沟通。",
+      "计算机科学领域、编程领域、或数据科学领域具有含金量的比赛奖项。",
+      "计算机科学及其它学术领域具有含金量的论文发表。",
+      "其它超乎常人的与此工作相关的才能。",
+    ],
+  },
+];
+---
+
+<main id="main-content" data-pagefind-body class="post-jd mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-8 sm:pt-10 sm:pb-12"
+    >
+      <span aria-hidden="true" class="deco-word select-none">AGENT</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase"
+      >
+        Notes · Agent JD
+      </p>
+
+      <h1
+        class="reveal mt-3 text-4xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span aria-hidden="true">·</span>
+        <span>约 {readingMinutes} 分钟</span>
+      </div>
+    </header>
+
+    {/* ===== 引子：出卖时间 ===== */}
+    <section class="app-layout">
+      <blockquote class="pull-quote reveal">
+        从体力劳动者到脑力劳动者，<br class="hidden sm:block" />
+        没有摆脱出卖时间，甚至出卖了每天中更多的时间。
+      </blockquote>
+      <p class="reveal stat-note">
+        北京市送外卖平均月薪 <b class="num">1w</b>。
+      </p>
+    </section>
+
+    {/* ===== 章节 01：独立开发 ===== */}
+    <section class="app-layout mt-4 space-y-5">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">01</span>
+        2026 独立开发最佳实践
+      </h2>
+
+      <p class="reveal source-note">
+        看到的文章：分享给大家我一年多的血泪独立开发踩坑经验。
+      </p>
+
+      <p class="reveal text-lg leading-relaxed">
+        2026 年，独立开发者想开发 APP，最佳实践是：
+      </p>
+
+      <div class="phase-card reveal">
+        <span class="phase-tag">MVP 阶段</span>
+        <p>先做 Web ➕ PWA。开发快，调试快，迭代快。</p>
+      </div>
+
+      {
+        stacks.map(group => (
+          <div class="stack-group reveal">
+            <h3 class="stack-label">{group.label}</h3>
+            <div class="chips">
+              {group.items.map(item => (
+                <span class="chip">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+
+      <p class="reveal text-lg leading-relaxed">
+        等产品真的跑起来，再做移动端。
+      </p>
+
+      <div class="core-idea reveal">
+        <span class="core-label">核心思路</span>
+        <ol>
+          <li>先用 Web ➕ PWA 验证需求。</li>
+          <li>真的有用户，再上 React Native ➕ Expo 做 App。</li>
+        </ol>
+      </div>
+
+      <a
+        class="link-card reveal"
+        href={geoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="link-card-label">🔗 geo 文章</span>
+        <span class="link-card-url">x.com/ai_xiaomu</span>
+      </a>
+    </section>
+
+    {/* ===== 章节 02：CREAO 招聘 ===== */}
+    <section class="app-layout mt-10 space-y-5">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>
+        CREAO 招聘
+      </h2>
+
+      {
+        creaoRoles.map(role => (
+          <div class="role-card reveal">
+            <div class="role-head">
+              <span class="role-no">{role.no}</span>
+              <h3 class="role-title">{role.title}</h3>
+            </div>
+            {role.paras.map(p => (
+              <p class="role-para">{p}</p>
+            ))}
+          </div>
+        ))
+      }
+
+      <div class="creao-closing reveal">
+        {creaoClosing.map(p => <p>{p}</p>)}
+        <p class="closing-punch">
+          未来 AI 软件的商业生态，会由今天这一小群真正下场的人定义。
+        </p>
+      </div>
+    </section>
+
+    {/* ===== 章节 03：DeepSeek Harness JD ===== */}
+    <section class="app-layout mt-10 space-y-5">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">03</span>
+        DeepSeek Harness 产品
+      </h2>
+
+      {
+        jdGroups.map(group => (
+          <div class="jd-group reveal">
+            <h3 class="jd-title">{group.label}</h3>
+            <ul class="jd-list">
+              {group.items.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+
+    {/* ===== 尾部 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* hero 背景装饰大字 */
+  .deco-word {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-end: -0.5rem;
+    z-index: -1;
+    font-weight: 800;
+    font-size: clamp(3rem, 13vw, 7rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  .post-jd :global(.num) {
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 开篇金句 */
+  .pull-quote {
+    margin-block: 0.5rem 1rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.3rem, 3.6vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .stat-note {
+    font-size: 1.05rem;
+    color: var(--muted-foreground);
+  }
+
+  /* 章节标题 */
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter-no {
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .source-note {
+    font-size: 0.95rem;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  /* MVP 阶段卡片 */
+  .phase-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  .phase-tag {
+    flex: none;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .phase-card p {
+    margin: 0;
+  }
+
+  /* 技术栈 chip */
+  .stack-group {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .stack-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+    color: var(--foreground);
+    font-size: 0.85rem;
+    line-height: 1.2;
+    transition:
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* 核心思路 */
+  .core-idea {
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+  }
+  .core-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .core-idea ol {
+    margin: 0;
+    padding-inline-start: 1.2rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .core-idea li {
+    color: var(--foreground);
+  }
+  .core-idea li::marker {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* geo 链接卡片 */
+  .link-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .link-card:hover {
+    border-color: var(--accent);
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+  .link-card-label {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .link-card-url {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+
+  /* CREAO 岗位卡片 */
+  .role-card {
+    padding: 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    transition: border-color 0.2s ease;
+  }
+  .role-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  }
+  .role-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    margin-bottom: 0.9rem;
+  }
+  .role-no {
+    flex: none;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .role-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--foreground);
+    line-height: 1.35;
+  }
+  .role-para {
+    color: var(--foreground);
+    opacity: 0.92;
+    line-height: 1.7;
+  }
+  .role-para + .role-para {
+    margin-top: 0.7rem;
+  }
+
+  .creao-closing {
+    padding-inline-start: 1.1rem;
+    border-inline-start: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    display: grid;
+    gap: 0.7rem;
+    color: var(--muted-foreground);
+    line-height: 1.7;
+  }
+  .closing-punch {
+    color: var(--foreground);
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  /* DeepSeek JD 分组 */
+  .jd-group {
+    padding: 1.3rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+  }
+  .jd-title {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--accent);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .jd-list {
+    margin: 0;
+    padding-inline-start: 1.2rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .jd-list li {
+    color: var(--foreground);
+    line-height: 1.65;
+  }
+  .jd-list li::marker {
+    color: var(--accent);
+  }
+
+  /* 入场动画 —— 仅在用户不偏好减少动效时启用 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
