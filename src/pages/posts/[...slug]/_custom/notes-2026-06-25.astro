@@ -274,6 +274,56 @@ const harnessParts = ["上下文工程", "架构约束", "团队知识 Memory", 
       </div>
     </section>
 
+    <div class="app-layout"><hr class="section-divider" /></div>
+
+    {/* ===== 五 · 随笔 ===== */}
+    <section class="app-layout section">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">随笔</p>
+        <h2 class="sec-title">很多人其实两三年就能翻身实现财富自由</h2>
+      </div>
+
+      <div class="post-body space-y-6 text-lg leading-relaxed">
+        <p class="reveal">
+          但这些人都死在一个很蠢的地方：刚攒到一点钱，就急着买车、换手机、买一堆贵东西，向外人证明自己混得不错。
+        </p>
+
+        <p class="reveal">你能翻身都原始资本，全都烧给别人看了。</p>
+
+        <blockquote class="pull-quote reveal">越想证明，越难积累。</blockquote>
+
+        <p class="reveal">
+          能让普通人变有钱的，不是更会省钱，是分得清什么东西会把钱带回来，什么东西只会把钱吃掉。
+        </p>
+
+        <div class="contrast-grid reveal">
+          <div class="contrast-card drain">
+            <div class="contrast-items">
+              <span class="ci">车</span><span class="ci">包</span><span class="ci">手机</span><span
+                class="ci">面子</span>
+            </div>
+            <p class="contrast-note">大多数时候都是<strong>消耗品</strong>。</p>
+          </div>
+          <div class="contrast-card gain">
+            <div class="contrast-items">
+              <span class="ci">技能</span><span class="ci">流量</span><span class="ci">客户</span><span
+                class="ci">资产</span>
+            </div>
+            <p class="contrast-note">才是<strong>翻盘筹码</strong>。</p>
+          </div>
+        </div>
+
+        <div class="pitfall reveal">
+          <p>第一桶金不怕少，最怕的是刚有一点，就被“面子”吃掉。</p>
+          <p>
+            还没变有钱，就先把自己装成了有钱人，<strong
+              >这才是实现财富自由路上最大的坑</strong
+            >。
+          </p>
+        </div>
+      </div>
+    </section>
+
     {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
     <div class="app-layout">
       <hr class="border-border my-8 border-dashed" />
@@ -706,6 +756,83 @@ const harnessParts = ["上下文工程", "架构约束", "团队知识 Memory", 
     font-weight: 800;
     line-height: 1.1;
     color: var(--accent);
+  }
+
+  /* ===== 财富：消耗品 vs 翻盘筹码 ===== */
+  .contrast-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .contrast-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .contrast-card {
+    padding: 1.3rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+  }
+  .contrast-card.drain {
+    border-color: color-mix(in srgb, var(--noise) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--noise) 7%, transparent);
+  }
+  .contrast-card.gain {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  .contrast-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .ci {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .drain .ci {
+    background-color: color-mix(in srgb, var(--noise) 14%, transparent);
+    color: var(--noise);
+  }
+  .gain .ci {
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+  }
+  .contrast-note {
+    margin-top: 0.95rem;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .drain .contrast-note strong {
+    color: var(--noise);
+    font-weight: 700;
+  }
+  .gain .contrast-note strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pitfall {
+    padding: 1.2rem 1.35rem;
+    border-inline-start: 3px solid var(--noise);
+    border-radius: 0 0.7rem 0.7rem 0;
+    background-color: color-mix(in srgb, var(--noise) 8%, transparent);
+  }
+  .pitfall p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .pitfall p + p {
+    margin-top: 0.6rem;
+  }
+  .pitfall strong {
+    color: var(--noise);
+    font-weight: 700;
   }
 
   /* ===== 入场动画 —— 仅在不偏好减少动效时启用 ===== */
