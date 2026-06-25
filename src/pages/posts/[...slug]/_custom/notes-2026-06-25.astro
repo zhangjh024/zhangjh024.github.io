@@ -1,0 +1,726 @@
+---
+/**
+ * 《6.25 随记》的定制设计页（slug 为 notes-2026-06-25）。
+ *
+ * 一篇博文，两段内容（随笔 + 笔记），正文文案 1:1 取自
+ * src/content/posts/notes-2026-06-25.md，不增删字句；这里只用手写前端结构排版。
+ * 文章的 SEO / 列表 / RSS / OG 仍走 md frontmatter。
+ *
+ * 由 [...slug]/index.astro 的「slug → 定制组件」注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+const sourceUrl = "https://mp.weixin.qq.com/s/vqEIJgsdQltsRNU2POlMHw";
+
+// 粗略阅读时长（中文约 400 字/分钟）
+const charCount = (post.body ?? "").replace(/\s+/g, "").length;
+const readingMinutes = Math.max(1, Math.round(charCount / 400));
+
+// 笔记·点 2 的流程步骤（原文用 → 连接）
+const flowSteps = ["AI 写 Spec", "功能实现", "Browser Use 验证", "自动提交上线"];
+// 笔记·点 3 的基建组件（原文用 + 连接）
+const harnessParts = ["上下文工程", "架构约束", "团队知识 Memory", "技术债梳理"];
+---
+
+<main id="main-content" data-pagefind-body class="post-notes mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header class="app-layout pt-6 pb-6 sm:pt-10 sm:pb-8">
+      <p class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase">
+        随记
+      </p>
+
+      <h1
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span aria-hidden="true">·</span>
+        <span>约 {readingMinutes} 分钟</span>
+      </div>
+    </header>
+
+    {/* ===== 一 · 随笔 ===== */}
+    <section class="app-layout section">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">随笔</p>
+        <h2 class="sec-title">不知道为什么很累，没有精力工作</h2>
+      </div>
+
+      <div class="post-body space-y-6 text-lg leading-relaxed">
+        <p class="reveal">
+          每天<b class="num">九点</b>下班，从晚上 <b class="num">12 点</b>睡到第二天早上<b
+            class="num">九点</b
+          >，
+        </p>
+
+        <blockquote class="pull-quote reveal">为什么还是觉得睡不够？</blockquote>
+
+        <p class="reveal">
+          感觉是<strong class="text-accent font-semibold">租房的环境太差了</strong>。
+        </p>
+
+        <p class="reveal">亚运村附近的房子基本全是垃圾，</p>
+
+        <p class="reveal noise-line">
+          不是<span class="noise-chip">马路噪音</span>，就是<span class="noise-chip"
+            >楼上噪音</span
+          >。
+        </p>
+
+        <div class="reveal verdict-wrap">
+          <span class="verdict-stamp">真的很垃圾</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="app-layout"><hr class="section-divider" /></div>
+
+    {/* ===== 二 · 笔记 ===== */}
+    <section class="app-layout section">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">笔记</p>
+        <h2 class="sec-title">字节火山引擎大会上洪定坤的分享</h2>
+      </div>
+
+      <div class="post-body space-y-6">
+        <a
+          class="link-card reveal"
+          href={sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="link-card-icon" aria-hidden="true">🔗</span>
+          <span class="link-card-body">
+            <span class="link-card-label">原文地址</span>
+            <span class="link-card-url">mp.weixin.qq.com</span>
+          </span>
+          <span class="link-card-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <p class="reveal lead text-lg leading-relaxed">有几点值得参考：</p>
+
+        {/* 01 */}
+        <section class="point reveal">
+          <div class="point-head">
+            <span class="point-no">01</span>
+            <h3>用原型驱动开发</h3>
+          </div>
+          <p class="point-desc">
+            用 AI 生成可交互原型替代 <b class="num">PRD</b
+            >，基于这个讨论，提前暴露分歧。
+          </p>
+        </section>
+
+        {/* 02 */}
+        <section class="point reveal">
+          <div class="point-head">
+            <span class="point-no">02</span>
+            <h3>AI Development 系统化</h3>
+          </div>
+          <div class="flow" role="list">
+            {
+              flowSteps.map((step, i) => (
+                <>
+                  {i > 0 && (
+                    <span class="flow-arrow" aria-hidden="true">
+                      →
+                    </span>
+                  )}
+                  <span class="flow-step" role="listitem">
+                    {step}
+                  </span>
+                </>
+              ))
+            }
+          </div>
+        </section>
+
+        {/* 03 */}
+        <section class="point reveal">
+          <div class="point-head">
+            <span class="point-no">03</span>
+            <h3>Harness 基建</h3>
+          </div>
+          <div class="combo">
+            {
+              harnessParts.map((part, i) => (
+                <>
+                  {i > 0 && (
+                    <span class="combo-plus" aria-hidden="true">
+                      +
+                    </span>
+                  )}
+                  <span class="combo-chip">{part}</span>
+                </>
+              ))
+            }
+          </div>
+          <div class="score">
+            <p class="score-text">
+              能把可交付性从 <b class="num">40~60</b> 分提到 <b class="num">80</b> 分
+            </p>
+            <div
+              class="score-bar"
+              role="img"
+              aria-label="可交付性从 40~60 分提升到 80 分"
+            >
+              <div class="score-fill"></div>
+              <div class="score-zone"></div>
+            </div>
+            <div class="score-ticks">
+              <span style={{ "--x": "50%" }}>40~60</span>
+              <span style={{ "--x": "80%" }}>80</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="app-layout"><hr class="section-divider" /></div>
+
+    {/* ===== 三 · 目标 ===== */}
+    <section class="app-layout section">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">目标</p>
+        <h2 class="sec-title">7 月份的目标</h2>
+      </div>
+
+      <div class="post-body goal-list space-y-4">
+        <div class="goal reveal">
+          <span class="goal-mark" aria-hidden="true"></span>
+          <p class="goal-text">
+            <span class="goal-chip">视频下载插件</span>、<span class="goal-chip"
+              >翻译插件</span
+            >、<span class="goal-chip">op</span> 全部自动化开发
+          </p>
+        </div>
+
+        <div class="goal reveal">
+          <span class="goal-mark" aria-hidden="true"></span>
+          <p class="goal-text">
+            组织内部的 AI Coding 实践沉淀下来，变成内部的 <span class="goal-chip"
+              >标准</span
+            >、<span class="goal-chip">工具</span>、<span class="goal-chip"
+              >技能</span
+            >
+          </p>
+        </div>
+
+        <div class="goal capstone reveal">
+          <span class="goal-mark" aria-hidden="true"></span>
+          <p class="goal-text">
+            完全实现前端业务线的 <b class="num">AI Development</b>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="app-layout"><hr class="section-divider" /></div>
+
+    {/* ===== 四 · 分享 ===== */}
+    <section class="app-layout section">
+      <div class="sec-head reveal">
+        <p class="sec-kicker">分享</p>
+        <p class="sec-lead-text">
+          苏州大学电子信息学院李鹏教授在毕业典礼很真诚的分享，说的很好。
+        </p>
+      </div>
+
+      <div class="quote-stage reveal">
+        <p class="quote-thesis">真正的稳定是</p>
+        <div class="quality-grid">
+          <div class="quality-card">
+            <span class="quality-qual">变化中学习的</span>
+            <strong class="quality-noun">能力</strong>
+          </div>
+          <div class="quality-card">
+            <span class="quality-qual">重新选择的</span>
+            <strong class="quality-noun">勇气</strong>
+          </div>
+          <div class="quality-card">
+            <span class="quality-qual">诚实面对自己的</span>
+            <strong class="quality-noun">力量</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* 本页用的「噪音 / 警示」红，独立于主题强调色，亮暗各取一档 */
+  .post-notes {
+    --noise: #d64545;
+  }
+  :global([data-theme="dark"]) .post-notes {
+    --noise: #ff6b6b;
+  }
+
+  /* 行内数字 / 关键词强调 */
+  .post-body :global(.num) {
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ===== 小节头 ===== */
+  .section {
+    margin-top: 0.5rem;
+  }
+  .sec-head {
+    margin-bottom: 1.5rem;
+  }
+  .sec-kicker {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .sec-title {
+    margin-top: 0.3rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+  .section-divider {
+    margin-block: 2.75rem;
+    border: 0;
+    border-top: 1px dashed var(--border);
+  }
+
+  /* ===== 随笔：金句强调块 ===== */
+  .pull-quote {
+    margin-block: 0.5rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.4rem, 4.5vw, 2rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--foreground);
+  }
+
+  /* 随笔：噪音二选一 */
+  .noise-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .noise-chip {
+    display: inline-block;
+    margin-inline: 0.1rem;
+    padding: 0.1rem 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--noise) 55%, transparent);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--noise) 12%, transparent);
+    color: var(--noise);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* 随笔：结论盖戳 */
+  .verdict-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+  .verdict-stamp {
+    --ink: var(--noise);
+    padding: 0.6rem 1.6rem;
+    border: 3px solid var(--ink);
+    border-radius: 0.6rem;
+    color: var(--ink);
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    line-height: 1;
+    transform: rotate(-5deg);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 35%, transparent) inset;
+    opacity: 0.92;
+  }
+
+  /* ===== 笔记：原文链接卡片 —— 突出展示（沿用站内既有样式） ===== */
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 0.9rem;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      color-mix(in srgb, var(--accent) 5%, transparent)
+    );
+    text-decoration: none;
+    box-shadow: 0 2px 12px color-mix(in srgb, var(--accent) 12%, transparent);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+  }
+  .link-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px color-mix(in srgb, var(--accent) 24%, transparent);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 22%, transparent),
+      color-mix(in srgb, var(--accent) 8%, transparent)
+    );
+  }
+  .link-card-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.65rem;
+    background-color: var(--accent);
+    font-size: 1.15rem;
+    line-height: 1;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .link-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .link-card-label {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--foreground);
+  }
+  .link-card-url {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+  .link-card-arrow {
+    flex: none;
+    margin-inline-start: auto;
+    color: var(--accent);
+    font-size: 1.35rem;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+  }
+  .link-card:hover .link-card-arrow {
+    transform: translateX(4px);
+  }
+
+  /* ===== 笔记：三点卡片 ===== */
+  .point {
+    padding: 1.3rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  }
+  .point-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .point-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.55rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .point-head h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+  .point-desc {
+    margin-top: 0.9rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+
+  /* 笔记·02 流程：→ 串起的步骤 */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .flow-step {
+    padding: 0.45rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    border-radius: 0.6rem;
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  /* 笔记·03 组件：+ 串起的基建块 */
+  .combo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1rem;
+  }
+  .combo-chip {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted) 55%, transparent);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--foreground);
+    white-space: nowrap;
+  }
+  .combo-plus {
+    color: var(--accent);
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  /* 笔记·03 分数：40~60 → 80 */
+  .score {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px dashed var(--border);
+  }
+  .score-text {
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .score-bar {
+    position: relative;
+    height: 0.7rem;
+    margin-top: 0.9rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted-foreground) 16%, transparent);
+    overflow: hidden;
+  }
+  .score-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 80%;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 45%, transparent),
+      var(--accent)
+    );
+  }
+  .score-zone {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 40%;
+    width: 20%;
+    background-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+  }
+  .score-ticks {
+    position: relative;
+    height: 1.1rem;
+    margin-top: 0.3rem;
+  }
+  .score-ticks span {
+    position: absolute;
+    inset-inline-start: var(--x);
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .score-ticks span:last-child {
+    color: var(--accent);
+  }
+
+  /* ===== 目标：清单条目 ===== */
+  .goal {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+  }
+  .goal-mark {
+    flex: none;
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-top: 0.2rem;
+    border: 2px solid var(--accent);
+    border-radius: 0.35rem;
+  }
+  .goal-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .goal-chip {
+    display: inline-block;
+    margin-inline: 0.05rem;
+    padding: 0.05rem 0.5rem;
+    border-radius: 0.4rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .goal.capstone {
+    border-color: var(--accent);
+    border-width: 1.5px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      color-mix(in srgb, var(--accent) 4%, transparent)
+    );
+  }
+  .goal.capstone .goal-mark {
+    background-color: var(--accent);
+  }
+  .goal.capstone .goal-text {
+    font-weight: 600;
+  }
+
+  /* ===== 分享：毕业典礼金句 ===== */
+  .sec-lead-text {
+    margin-top: 0.4rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .quote-stage::before {
+    content: "“";
+    display: block;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 3rem;
+    line-height: 0.7;
+    color: var(--accent);
+    opacity: 0.5;
+    margin-bottom: 0.3rem;
+  }
+  .quote-thesis {
+    margin-bottom: 1.1rem;
+    font-size: clamp(1.4rem, 4.5vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--foreground);
+  }
+  .quality-grid {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .quality-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .quality-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 26%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .quality-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .quality-qual {
+    font-size: 0.92rem;
+    color: var(--muted-foreground);
+  }
+  .quality-noun {
+    font-size: 1.7rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--accent);
+  }
+
+  /* ===== 入场动画 —— 仅在不偏好减少动效时启用 ===== */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
