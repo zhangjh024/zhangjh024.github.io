@@ -1,0 +1,469 @@
+---
+/**
+ * 《6.26 周五随想》的定制设计页（slug: notes-2026-06-26）。
+ *
+ * 内容文案取自 src/content/posts/notes-2026-06-26.md，含两则随想：
+ *   01 都压在算法身上 —— 5 个负载压向「算法」承重基座的可视化重排；
+ *   02 AI 全栈研发工程师 —— 岗位职责与任职要求的卡片化重排。
+ * 文字一字不增、不改，只做排版、编号与强调。SEO / 列表 / RSS / OG 走 md frontmatter。
+ *
+ * 由 [...slug]/index.astro 的「slug → 定制组件」注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 第 01 则：「压在算法身上」的 5 个负载，文字均取自原文
+const loads = ["提示词", "上下文工程", "RAG 策略", "效果评估", "业务规则兜底"];
+
+// 第 02 则：AI 全栈研发工程师 —— 岗位职责（原文逐字）
+const duties = [
+  "负责 Web 前端与服务端的全栈研发，承接 AI 视频画布产品（类 LibTV / RunningHub RHTV / TapNow 的无限画布 + 节点式工作流）从架构设计到功能落地。",
+  "构建并优化画布交互、节点编排引擎、工作流调度与任务状态管理（多任务并发、长任务轮询、实时进度回传等）。",
+  "设计高可用服务端架构，对接 AIGC 模型推理服务与 GPU 算力调度，封装稳定的生成 API 与任务队列。",
+  "负责性能优化（前端大画布渲染、WebSocket / SSE 实时通信、服务端高并发）、可观测性与稳定性建设。",
+  "与算法、产品紧密协作，将模型能力快速产品化上线。",
+];
+
+// 任职要求（原文逐字），加分项单列做特殊样式
+const requirements = [
+  "本科及以上，计算机相关专业；3 年以上全栈或后端研发经验。",
+  "前端：精通 TypeScript / React（或 Vue），有复杂交互 / 画布类项目经验（Canvas、WebGL、节点图编辑器如 React Flow / LiteGraph 等优先）。",
+  "服务端：熟练 Node.js / Go / Python 至少一门，熟悉微服务、消息队列、缓存、数据库设计，了解高并发与异步任务架构。",
+  "熟悉云原生与部署运维（Docker / K8s、CI/CD），有 GPU 任务调度或推理服务对接经验优先。",
+  "有视频画布 / 工作流 / 在线协作类产品研发经验者强烈优先。",
+];
+const bonus =
+  "加分项：熟悉 ComfyUI 工作流 / 节点协议或做过类似编排引擎；了解 AIGC 模型推理链路（diffusion、视频生成模型部署）；有 0→1 产品从架构到上线的完整经验。";
+---
+
+<main id="main-content" data-pagefind-body class="post-notes mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-6 sm:pt-10 sm:pb-8"
+    >
+      <span aria-hidden="true" class="deco-date select-none">6.26</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase"
+      >
+        Friday Notes
+      </p>
+
+      <h1
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 01 · 都压在算法身上 ===== */}
+      <h2 class="chapter reveal" style={{ "--d": "0.15s" }}>
+        <span class="chapter-no">01</span>都压在<span class="text-accent"
+          >算法</span
+        >身上
+      </h2>
+
+      {/* 承重可视化：5 个负载层层压在「算法」基座上 */}
+      <section
+        class="load-viz reveal"
+        style={{ "--d": "0.2s" }}
+        aria-label="提示词、上下文工程、RAG 策略、效果评估、业务规则兜底，基本都压在算法身上"
+      >
+        <ol class="loads">
+          {
+            loads.map((item, i) => (
+              <li class="load" style={{ "--d": `${0.22 + i * 0.06}s` }}>
+                <span class="load-no">{String(i + 1).padStart(2, "0")}</span>
+                <span class="load-name">{item}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="press" aria-hidden="true">
+          <span class="press-label">基本都压在</span>
+          <span class="press-arrows">
+            <span>↓</span><span>↓</span><span>↓</span>
+          </span>
+        </div>
+
+        <div class="base">
+          <span class="base-name">算法</span>
+          <span class="base-sub">身上</span>
+        </div>
+      </section>
+
+      <blockquote class="pull-quote reveal">
+        提示词、上下文工程、RAG 策略、效果评估、业务规则兜底，<br
+          class="hidden sm:block"
+        />基本都<span class="text-accent">压在算法身上</span>。
+      </blockquote>
+
+      {/* ===== 02 · AI 全栈研发工程师 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>AI 全栈研发工程师
+      </h2>
+
+      <ol class="duty-list">
+        {
+          duties.map((d, i) => (
+            <li class="duty reveal">
+              <span class="duty-no">{String(i + 1).padStart(2, "0")}</span>
+              <p>{d}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <h3 class="sub-title reveal">任职要求</h3>
+
+      <ol class="req-list">
+        {
+          requirements.map((r, i) => (
+            <li class="req reveal">
+              <span class="req-no">{i + 1}</span>
+              <p>{r}</p>
+            </li>
+          ))
+        }
+        <li class="req bonus reveal">
+          <span class="req-no req-no-bonus" aria-hidden="true">＋</span>
+          <p>{bonus}</p>
+        </li>
+      </ol>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* hero 角落的超大装饰日期，弱化为背景层 */
+  .deco-date {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-end: 0;
+    z-index: -1;
+    font-weight: 700;
+    font-size: clamp(3.5rem, 15vw, 8rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* 章节标题（01 / 02） */
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 2.75rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter:first-of-type {
+    margin-top: 1rem;
+  }
+  .chapter-no {
+    flex: none;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== 01 承重可视化 ===== */
+  .load-viz {
+    margin-top: 1.5rem;
+  }
+  .loads {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .load {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.95rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background-color: color-mix(in srgb, var(--muted) 40%, transparent);
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: var(--foreground);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  /* 奇偶交替错位，营造层层叠压的重量感 */
+  .load:nth-child(odd) {
+    margin-inline-end: 1.75rem;
+  }
+  .load:nth-child(even) {
+    margin-inline-start: 1.75rem;
+  }
+  .load:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .load-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .press {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin-block: 1.1rem;
+  }
+  .press-label {
+    color: var(--muted-foreground);
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+  }
+  .press-arrows {
+    display: flex;
+    gap: 0.7rem;
+    color: var(--accent);
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .base {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    box-shadow: 0 16px 32px -14px
+      color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .base-name {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .base-sub {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  /* 原句金句块 */
+  .pull-quote {
+    margin-top: 1.75rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.2rem, 3.2vw, 1.55rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--foreground);
+  }
+
+  /* ===== 02 岗位职责 ===== */
+  .duty-list {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .duty {
+    display: flex;
+    gap: 1rem;
+    padding: 1.05rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .duty:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+  .duty-no {
+    flex: none;
+    padding-top: 0.15rem;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .duty p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+
+  /* 任职要求 */
+  .sub-title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 2.25rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .sub-title::before {
+    content: "";
+    flex: none;
+    width: 0.4rem;
+    height: 1.15rem;
+    border-radius: 2px;
+    background-color: var(--accent);
+  }
+  .req-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .req {
+    display: flex;
+    gap: 0.9rem;
+    padding: 0.9rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease;
+  }
+  .req:hover {
+    border-color: var(--accent);
+  }
+  .req-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .req p {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+  /* 加分项：虚线描边 + 淡 accent 底，区分「锦上添花」 */
+  .req.bonus {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+  .req-no-bonus {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 1rem;
+  }
+
+  /* 入场动画 —— 仅在用户不偏好减少动效时启用，避免内容初始不可见 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+    .press-arrows span {
+      display: inline-block;
+      animation: press-bounce 1.4s ease-in-out infinite;
+    }
+    .press-arrows span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+    .press-arrows span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes press-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateY(4px);
+      opacity: 1;
+    }
+  }
+</style>
