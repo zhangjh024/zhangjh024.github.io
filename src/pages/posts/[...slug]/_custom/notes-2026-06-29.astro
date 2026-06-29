@@ -228,6 +228,31 @@ const heal = [
           >的付费圈子
         </p>
       </div>
+
+      {/* ===== 04 · 如何短时间内鉴别好姑娘？ ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">04</span>如何短时间内鉴别<span
+          class="text-accent">好姑娘</span
+        >？
+      </h2>
+
+      <div class="qa-author reveal">
+        <span class="qa-avatar" aria-hidden="true">答</span>
+        <span class="qa-name">周树人</span>
+        <span class="qa-title">精通运动学，心理学</span>
+        <span class="qa-approve">5754 人赞同</span>
+      </div>
+
+      <div class="methods reveal">
+        <span class="method">示弱</span>
+        <span class="method">讨好</span>
+        <span class="method">真诚</span>
+      </div>
+      <p class="methods-note reveal">这三条一出</p>
+
+      <blockquote class="qa-punch reveal">
+        <span class="text-accent">烂人立马现原形</span>，这招我屡试不爽
+      </blockquote>
     </div>
 
     {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
@@ -686,6 +711,86 @@ const heal = [
     color: var(--accent);
     font-weight: 700;
     white-space: nowrap;
+  }
+
+  /* ===== 04 · 问答：鉴别好姑娘 ===== */
+  .qa-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  }
+  .qa-avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+  .qa-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .qa-title {
+    font-size: 0.88rem;
+    color: var(--muted-foreground);
+  }
+  .qa-approve {
+    margin-inline-start: auto;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .methods {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+  .method {
+    flex: 1 1 0;
+    min-width: 5rem;
+    text-align: center;
+    padding: 0.9rem 1rem;
+    border-radius: 0.85rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    box-shadow: 0 12px 26px -16px
+      color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .methods-note {
+    margin: 0.9rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .qa-punch {
+    margin: 0.6rem 0 0;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.55;
+    color: var(--foreground);
   }
 
   /* 入场动画 —— 仅在用户不偏好减少动效时启用，避免内容初始不可见 */
