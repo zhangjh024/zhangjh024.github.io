@@ -1,0 +1,706 @@
+---
+/**
+ * 《6.29 随想》的定制设计页（slug: notes-2026-06-29）。
+ *
+ * 内容文案取自 src/content/posts/notes-2026-06-29.md，含三则：
+ *   01 明明睡了很久 —— 睡眠困惑的夜色自问卡片；
+ *   02 恢复心力小tips —— 一张图里多条评论的文字重排：
+ *      旅行金句 / 「情绪 = 行动」对照网格 / 重新整理人生清单 /
+ *      心脉受损的「植物→动物→人」三段自愈 / 少年心气压轴金句；
+ *   03 下定决心了 —— 作者自己的话：赚钱能力、赚钱路径与选择的自由、副业收入超过主业、今日去付费圈子。
+ * 文字一字不增、不改（含图中的点赞数与 emoji），只做排版、编号、强调与对照。
+ * SEO / 列表 / RSS / OG 走 md frontmatter。
+ *
+ * 由 [...slug]/index.astro 的「slug → 定制组件」注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 02 · Tip B：「情绪 = 行动」映射（原文逐字，"X=Y" 拆成左右两栏对照）
+const moods = [
+  { feel: "难过", act: "该运动了" },
+  { feel: "胡思乱想", act: "该写日记了" },
+  { feel: "烦躁", act: "该洗澡、打扮了" },
+  { feel: "懒得动", act: "该先做一分钟" },
+  { feel: "压力大", act: "该去暴汗" },
+  { feel: "生气", act: "该听音乐、吃/做/学好吃的" },
+  { feel: "焦虑", act: "该接触大自然" },
+  { feel: "混乱", act: "该看书" },
+];
+
+// 02 · Tip C：重新整理人生的四条（原文逐字），括号注解拆成 note 标签
+const resets = [
+  { text: "无法专注做一件事", note: "被干扰" },
+  { text: "长期得不到正反馈", note: "挫败感" },
+  { text: "严重缺少睡眠", note: "休息不足" },
+  { text: "缺少阅读与思考", note: "独立意识不够" },
+];
+
+// 02 · Tip E：心脉受损了的「植物→动物→人」三段自愈（原文逐字，身份词做强调）
+const heal = [
+  { lead: "先把自己当成", who: "植物", act: "，喝水、吃饭、晒太阳、睡觉！" },
+  { lead: "再把自己当成", who: "动物", act: "，散步遛弯，看风景！" },
+  { lead: "最后再做回", who: "人", act: "，正视自己的欲望！" },
+];
+---
+
+<main id="main-content" data-pagefind-body class="post-notes mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-6 sm:pt-10 sm:pb-8"
+    >
+      <span aria-hidden="true" class="deco-date select-none">6.29</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase"
+      >
+        Monday Notes
+      </p>
+
+      <h1
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 01 · 明明睡了很久 ===== */}
+      <h2 class="chapter reveal" style={{ "--d": "0.15s" }}>
+        <span class="chapter-no">01</span>明明<span class="text-accent"
+          >睡了很久</span
+        >
+      </h2>
+
+      <section class="sleep reveal" style={{ "--d": "0.2s" }}>
+        <span class="qmark" aria-hidden="true">?</span>
+        <p class="sleep-main">
+          感觉还是休息不好，<span class="text-accent">明明睡了很久</span>
+        </p>
+        <p class="sleep-sub">总觉得头闷闷的</p>
+        <p class="sleep-ask">
+          是不是以后睡觉需要<span class="text-accent">开窗户开门</span>啊
+        </p>
+      </section>
+
+      {/* ===== 02 · 恢复心力小tips ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>恢复心力小<span class="lower">tips</span>
+      </h2>
+
+      {/* Tip A · 旅行 */}
+      <figure class="tip-quote reveal">
+        <span class="loves">♥ 4510</span>
+        <blockquote>
+          我教你们一个<span class="hl">立竿见影</span
+          >的方法，一个人去旅游，最好是出国，靠自己的能力去解决旅途中的各种问题，完成这趟旅途，你的眼界、内心的自信和成就感，会让你<span
+            class="hl">整个人都活过来</span
+          >
+        </blockquote>
+      </figure>
+
+      {/* Tip B · 情绪 = 行动 对照网格 */}
+      <section class="moods reveal">
+        <span class="loves">♥ 5879</span>
+        <ul class="mood-grid">
+          {
+            moods.map(m => (
+              <li class="mood">
+                <span class="mood-feel">{m.feel}</span>
+                <span class="mood-eq" aria-hidden="true">
+                  =
+                </span>
+                <span class="mood-act">{m.act}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* Tip C · 重新整理自己的人生 */}
+      <section class="resets reveal">
+        <span class="loves">♥ 1089</span>
+        <ol class="reset-list">
+          {
+            resets.map((r, i) => (
+              <li class="reset">
+                <span class="reset-no">{i + 1}</span>
+                <span class="reset-text">{r.text}</span>
+                <span class="reset-note">{r.note}</span>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="wish">
+          愿2026年，<span class="text-accent">重新整理自己的人生</span>
+        </p>
+      </section>
+
+      {/* Tip E · 心脉受损了：植物 → 动物 → 人 */}
+      <section class="heal reveal">
+        <span class="loves">♥ 389</span>
+        <p class="heal-intro">如果你心脉受损了，请记住：</p>
+        <ol class="heal-steps">
+          {
+            heal.map((h, i) => (
+              <li class="heal-step">
+                <span class="heal-no">{i + 1}</span>
+                <p class="heal-body">{h.lead}<span class="heal-who">{h.who}</span>{h.act}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="heal-coda">
+          人生很苦，本就向死而生！这个世界，是我们一个人的世界，照顾好自己，别太执着！
+        </p>
+        <p class="heal-bless">愿都好🌹</p>
+      </section>
+
+      {/* Tip D · 少年心气（压轴 · 最高赞） */}
+      <figure class="finale reveal">
+        <span class="loves loves-lg">♥ 3.6万</span>
+        <blockquote class="finale-text">
+          少年心气是不可再生之物，你回来的不是心气，是历经千辛万苦得到的<span
+            class="text-accent">无畏和从容</span
+          >
+        </blockquote>
+      </figure>
+
+      {/* ===== 03 · 下定决心了 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">03</span>下定<span class="text-accent">决心</span
+        >了
+      </h2>
+
+      <section class="resolve reveal">
+        <p class="resolve-lead">一定要有自己赚钱的能力呀！！</p>
+        <p class="resolve-aim">
+          让你找到属于自己的<span class="text-accent">赚钱路径</span>，从而拥有<span
+            class="text-accent">选择的自由</span
+          >。
+        </p>
+        <p class="resolve-main">
+          下定决心了，一定要让我的<span class="text-accent"
+            >副业收入超过主业</span
+          >
+        </p>
+        <div class="versus" aria-hidden="true">
+          <span class="versus-a">副业</span>
+          <span class="versus-gt">＞</span>
+          <span class="versus-b">主业</span>
+        </div>
+      </section>
+
+      <div class="today reveal">
+        <span class="today-date">6.29 周一</span>
+        <p class="today-text">
+          今天去<span class="place">生菜有道</span>和<span class="place"
+            >哥飞</span
+          >的付费圈子
+        </p>
+      </div>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* hero 角落的超大装饰日期，弱化为背景层 */
+  .deco-date {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-end: 0;
+    z-index: -1;
+    font-weight: 700;
+    font-size: clamp(3.5rem, 15vw, 8rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* 章节标题（01 / 02 / 03），与系列其它随想保持一致 */
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 2.75rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter:first-of-type {
+    margin-top: 1rem;
+  }
+  .chapter-no {
+    flex: none;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  /* 「tips」小写英文，跟中文同字重但稍收一点字距 */
+  .lower {
+    text-transform: none;
+    letter-spacing: 0.01em;
+  }
+
+  /* 每块右上角的「♥ 赞数」标记（图中信息，原样呈现） */
+  .loves {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ===== 01 · 睡眠自问卡片 ===== */
+  .sleep {
+    position: relative;
+    margin-top: 1.5rem;
+    padding: 1.75rem 1.6rem;
+    border: 1px solid var(--border);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.95rem;
+    background-color: color-mix(in srgb, var(--muted) 35%, transparent);
+    overflow: hidden;
+  }
+  .sleep-main {
+    margin: 0;
+    font-size: clamp(1.3rem, 4.2vw, 1.85rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .sleep-sub {
+    margin: 0.8rem 0 0;
+    font-size: 1.05rem;
+    color: var(--muted-foreground);
+  }
+  .sleep-ask {
+    margin: 1.2rem 0 0;
+    font-size: clamp(1.15rem, 3.4vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  /* 右下角的装饰问号，呼应「是不是……啊」的自问 */
+  .qmark {
+    position: absolute;
+    inset-inline-end: 0.5rem;
+    bottom: -1.75rem;
+    z-index: -1;
+    font-size: clamp(5rem, 20vw, 9rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  /* ===== 02 · Tip A 旅行金句 ===== */
+  .tip-quote {
+    margin: 1.4rem 0 0;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.95rem;
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  }
+  .tip-quote blockquote {
+    margin: 0.75rem 0 0;
+    padding: 0;
+    border: 0;
+    font-size: clamp(1.05rem, 2.8vw, 1.2rem);
+    font-weight: 500;
+    line-height: 1.8;
+    color: var(--foreground);
+  }
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== 02 · Tip B 情绪 = 行动 ===== */
+  .moods {
+    margin-top: 1.4rem;
+  }
+  .mood-grid {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  @media (max-width: 540px) {
+    .mood-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .mood {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .mood:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .mood-feel {
+    flex: none;
+    padding: 0.22rem 0.62rem;
+    border-radius: 0.55rem;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .mood-eq {
+    flex: none;
+    color: var(--muted-foreground);
+    font-weight: 700;
+  }
+  .mood-act {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--foreground);
+  }
+
+  /* ===== 02 · Tip C 重新整理人生 ===== */
+  .resets {
+    margin-top: 1.4rem;
+  }
+  .reset-list {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .reset {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease;
+  }
+  .reset:hover {
+    border-color: var(--accent);
+  }
+  .reset-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .reset-text {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .reset-note {
+    flex: none;
+    padding: 0.22rem 0.62rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted) 55%, transparent);
+    color: var(--muted-foreground);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .wish {
+    margin: 1rem 0 0;
+    padding: 1.15rem 1.25rem;
+    border-radius: 0.85rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 9%, transparent);
+    font-size: clamp(1.1rem, 3vw, 1.35rem);
+    font-weight: 700;
+    text-align: center;
+    color: var(--foreground);
+  }
+
+  /* ===== 02 · Tip E 植物 → 动物 → 人 ===== */
+  .heal {
+    margin-top: 1.4rem;
+  }
+  .heal-intro {
+    margin: 0.9rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .heal-steps {
+    list-style: none;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .heal-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .heal-step:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+  .heal-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    margin-top: 0.1rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .heal-body {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .heal-who {
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .heal-coda {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .heal-bless {
+    margin: 0.5rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* ===== 02 · Tip D 压轴金句 ===== */
+  .finale {
+    margin: 1.75rem 0 0;
+    padding: 2.1rem 1.6rem;
+    border-radius: 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      color-mix(in srgb, var(--accent) 4%, transparent)
+    );
+    text-align: center;
+  }
+  .finale-text {
+    margin: 0.95rem 0 0;
+    padding: 0;
+    border: 0;
+    font-size: clamp(1.3rem, 4.4vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+    color: var(--foreground);
+  }
+  .loves-lg {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.85rem;
+  }
+
+  /* ===== 03 · 下定决心了 ===== */
+  .resolve {
+    margin-top: 1.5rem;
+    padding: 1.6rem 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+    border-radius: 0.95rem;
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  .resolve-lead {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .resolve-aim {
+    margin: 0.65rem 0 0;
+    font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+  .resolve-main {
+    margin: 0.7rem 0 0;
+    font-size: clamp(1.3rem, 4vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .versus {
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .versus-a,
+  .versus-b {
+    display: grid;
+    place-items: center;
+    padding: 0.7rem 1.4rem;
+    border-radius: 0.8rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+    font-weight: 800;
+  }
+  .versus-a {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    box-shadow: 0 12px 26px -14px
+      color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .versus-b {
+    background-color: color-mix(in srgb, var(--muted) 60%, transparent);
+    color: var(--muted-foreground);
+  }
+  .versus-gt {
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* 今日行动 */
+  .today {
+    margin-top: 1rem;
+    padding: 1.2rem 1.4rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, var(--border));
+    border-radius: 0.9rem;
+  }
+  .today-date {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+  }
+  .today-text {
+    margin: 0.7rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .place {
+    display: inline-block;
+    margin: 0 0.15rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* 入场动画 —— 仅在用户不偏好减少动效时启用，避免内容初始不可见 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

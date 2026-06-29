@@ -18,6 +18,7 @@ import TenXProgrammer from "./_custom/10x-programmer.astro";
 import SellingTime from "./_custom/selling-time.astro";
 import Notes20260625 from "./_custom/notes-2026-06-25.astro";
 import Notes20260626 from "./_custom/notes-2026-06-26.astro";
+import Notes20260629 from "./_custom/notes-2026-06-29.astro";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -84,6 +85,7 @@ const customRenderers: Record<string, typeof TenXProgrammer> = {
   "/selling-time": SellingTime,
   "/notes-2026-06-25": Notes20260625,
   "/notes-2026-06-26": Notes20260626,
+  "/notes-2026-06-29": Notes20260629,
 };
 const CustomPost: typeof TenXProgrammer | undefined =
   customRenderers[getPostSlug(post.id, post.filePath)];
