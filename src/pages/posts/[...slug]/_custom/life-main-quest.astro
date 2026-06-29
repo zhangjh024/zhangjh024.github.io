@@ -123,6 +123,8 @@ const traps = [
         {title}
       </h1>
 
+      <p class="goal reveal" style={{ "--d": "0.08s" }}>【目标：<span class="goal-hl">时间自由</span>】</p>
+
       <div
         class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
         style={{ "--d": "0.1s" }}
@@ -270,6 +272,24 @@ const traps = [
 
   .post-body {
     padding-bottom: 1rem;
+  }
+
+  /* hero 目标徽章 —— 整篇主线任务的总目标 */
+  .goal {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.9rem;
+    padding: 0.4rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--foreground);
+  }
+  .goal-hl {
+    color: var(--accent);
   }
 
   /* 章节标题（一 / 二 / 三）—— 中文序号放进 accent 方块 */
