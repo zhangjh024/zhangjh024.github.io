@@ -1,0 +1,617 @@
+---
+/**
+ * 《人生主线任务》的定制设计页（slug: life-main-quest）。
+ *
+ * 内容文案取自 src/content/posts/life-main-quest.md：
+ *   一 上半场·苦修积累期 —— 金融/认知/健康三大资本卡 + 上半场大忌警示；
+ *   二 下半场·系统建设期 —— 主线目标高亮 + 三种落地路径 + 关键准则；
+ *   三 支线陷阱 —— 四条「困死支线」警示。
+ * 文字一字不增不改；原文把「健康资本」误编为认知资本下的「4.」，依后文「三大资本」
+ * 之意在排版上归位为第三大资本（只摆正结构、不动文字）。SEO / 列表 / RSS / OG 走 md frontmatter。
+ *
+ * 由 [...slug]/index.astro 的「slug → 定制组件」注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 一 · 上半场三大资本（原文逐字；健康资本由「4.」归位为第三大资本）
+const capitals = [
+  {
+    no: "01",
+    name: "金融资本",
+    sub: "本金+财商",
+    items: [
+      "强制储蓄：每月收入留存30%以上，杜绝透支消费、超前享乐。",
+      "学习资金规律：弄懂复利、资产与负债区别，不盲目炒股赌博，优先低风险复利资产打底。",
+      "不被消费主义绑架：名牌、奢侈品、无用社交开销全部压缩，钱是下半场搭建系统的原材料。",
+    ],
+  },
+  {
+    no: "02",
+    name: "认知资本",
+    sub: "眼界+方法论",
+    items: [
+      "少刷碎片化娱乐，深耕一个行业，吃透行业规则、盈利逻辑。",
+      "远离底层圈子抱怨负能量，多看经济、历史、商业类书籍，建立独立思考框架。",
+      "认清真相：打工是换生活费，永远无法致富；认知决定你能不能抓住风口、避开大坑。",
+    ],
+  },
+  {
+    no: "03",
+    name: "健康资本",
+    sub: "人生账户本体",
+    items: [
+      "身体就是你的本金账户，身体垮了所有积累归零",
+      "规律作息、固定运动，戒掉纵欲、酗酒、熬夜。",
+      "每年体检，省下医药费就是变相存钱，只有长寿，才能吃到复利长期红利。",
+    ],
+  },
+];
+
+// 二 · 下半场三种落地路径（原文逐字）
+const paths = [
+  {
+    no: "01",
+    name: "资产投资路线",
+    desc: "用上半场积攒本金，配置股权、基金、不动产等生息资产，靠利息、分红、增值赚钱。",
+  },
+  {
+    no: "02",
+    name: "IP/产品路线",
+    desc: "把深耕多年的技能做成课程、内容、实物产品，一次创作，无限次售卖。",
+  },
+  {
+    no: "03",
+    name: "小生意闭环路线",
+    desc: "搭建标准化小店、供应链、分销体系，靠员工和规则运转，不靠自己天天盯岗。",
+  },
+];
+
+// 二 · 关键准则（原文逐字）
+const principles = [
+  "系统核心：产品/资产自动产生现金流，你只做优化管理，不再靠出卖单日时间换取报酬。",
+  "上半场三大资本厚度，直接决定下半场系统能不能建成。",
+];
+
+// 三 · 支线陷阱（原文逐字）
+const traps = [
+  "无效人情应酬、攀比消费、沉迷短视频娱乐；",
+  "频繁跳槽换行业，频繁短线投机赌博；",
+  "过早被家庭琐事绑架，掏空积蓄与精力；",
+  "追求稳定死工资，一辈子止步打工，放弃搭建被动系统。",
+];
+---
+
+<main id="main-content" data-pagefind-body class="post-quest mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-6 sm:pt-10 sm:pb-8"
+    >
+      <span aria-hidden="true" class="deco-quest select-none">QUEST</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.22em] uppercase"
+      >
+        Main Quest
+      </p>
+
+      <h1
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.1s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 一 · 上半场 ===== */}
+      <h2 class="chapter reveal" style={{ "--d": "0.12s" }}>
+        <span class="chapter-no">一</span>上半场 · <span class="text-accent"
+          >苦修积累期</span
+        >
+      </h2>
+      <div class="phase-meta reveal" style={{ "--d": "0.16s" }}>
+        <span class="time-badge">20~35岁</span>
+        <span class="phase-tag">原始资本积累</span>
+      </div>
+
+      {/* 三大资本 */}
+      <div class="capitals">
+        {
+          capitals.map((c, i) => (
+            <section class="capital reveal" style={{ "--d": `${0.2 + i * 0.06}s` }}>
+              <div class="capital-head">
+                <span class="capital-no">{c.no}</span>
+                <div class="capital-title">
+                  <h3 class="capital-name">{c.name}</h3>
+                  <span class="capital-sub">{c.sub}</span>
+                </div>
+              </div>
+              <ul class="capital-items">
+                {c.items.map(it => (
+                  <li class="capital-item">{it}</li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+
+      {/* 上半场大忌 */}
+      <aside class="warn reveal">
+        <span class="warn-label">上半场大忌</span>
+        <p class="warn-text">
+          早早被婚恋、人情、安逸工作捆绑，透支本金与时间，一辈子困在<span
+            class="warn-hl">「用时间换月薪」的死循环</span
+          >。
+        </p>
+      </aside>
+
+      {/* ===== 二 · 下半场 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">二</span>下半场 · <span class="text-accent"
+          >系统建设期</span
+        >
+      </h2>
+      <div class="phase-meta reveal">
+        <span class="time-badge">35岁以后</span>
+        <span class="phase-tag">脱离时间换钱</span>
+      </div>
+
+      {/* 主线目标 */}
+      <div class="target reveal">
+        <span class="target-label">主线目标</span>
+        <p class="target-text">
+          打造不需要亲自上班，也能自动进账的个人商业模式（<span class="text-accent"
+            >睡后收入系统</span
+          >），彻底解绑时间与收入。
+        </p>
+      </div>
+
+      {/* 三种落地路径 */}
+      <h3 class="sub-title reveal">三种主流落地路径</h3>
+      <div class="path-grid">
+        {
+          paths.map((p, i) => (
+            <section class="path-card reveal" style={{ "--d": `${0.1 + i * 0.06}s` }}>
+              <span class="path-no">{p.no}</span>
+              <h4 class="path-name">{p.name}</h4>
+              <p class="path-desc">{p.desc}</p>
+            </section>
+          ))
+        }
+      </div>
+
+      {/* 关键准则 */}
+      <h3 class="sub-title reveal">关键准则</h3>
+      <ul class="principles">
+        {principles.map(pr => <li class="principle reveal">{pr}</li>)}
+      </ul>
+
+      {/* ===== 三 · 支线陷阱 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">三</span>支线<span class="text-accent">陷阱</span>
+      </h2>
+      <p class="trap-intro reveal">绝大多数人困死在支线，荒废主线</p>
+      <ul class="trap-list">
+        {
+          traps.map((t, i) => (
+            <li class="trap-item reveal" style={{ "--d": `${0.08 + i * 0.05}s` }}>
+              <span class="trap-x" aria-hidden="true">
+                ✕
+              </span>
+              <span class="trap-text">{t}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* hero 角落装饰大字 */
+  .deco-quest {
+    position: absolute;
+    top: -0.4rem;
+    inset-inline-end: 0;
+    z-index: -1;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 12vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* 章节标题（一 / 二 / 三）—— 中文序号放进 accent 方块 */
+  .chapter {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 2.75rem;
+    font-size: clamp(1.35rem, 4vw, 1.6rem);
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter:first-of-type {
+    margin-top: 1.25rem;
+  }
+  .chapter-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.6rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  /* 阶段元信息：时间徽章 + 阶段标签 */
+  .phase-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1rem;
+  }
+  .time-badge {
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .phase-tag {
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  /* ===== 三大资本卡 ===== */
+  .capitals {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .capital {
+    padding: 1.25rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--muted) 25%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .capital:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .capital-head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-bottom: 0.9rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  .capital-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.7rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .capital-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .capital-name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .capital-sub {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .capital-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .capital-item {
+    position: relative;
+    padding-inline-start: 1.1rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+  .capital-item::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0.62rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+  }
+
+  /* ===== 大忌警示 ===== */
+  .warn {
+    margin-top: 1.3rem;
+    padding: 1.15rem 1.3rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 50%, var(--border));
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+  }
+  .warn-label {
+    display: inline-block;
+    margin-bottom: 0.55rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .warn-text {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+  .warn-hl {
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* ===== 主线目标 ===== */
+  .target {
+    margin-top: 1.4rem;
+    padding: 1.5rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      color-mix(in srgb, var(--accent) 4%, transparent)
+    );
+  }
+  .target-label {
+    display: inline-block;
+    margin-bottom: 0.6rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .target-text {
+    margin: 0;
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  /* 小节标题（三种路径 / 关键准则） */
+  .sub-title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .sub-title::before {
+    content: "";
+    flex: none;
+    width: 0.4rem;
+    height: 1.15rem;
+    border-radius: 2px;
+    background-color: var(--accent);
+  }
+
+  /* ===== 三种落地路径 ===== */
+  .path-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+  @media (max-width: 700px) {
+    .path-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .path-card {
+    padding: 1.2rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .path-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .path-no {
+    display: inline-grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .path-name {
+    margin: 0.7rem 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .path-desc {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+
+  /* ===== 关键准则 ===== */
+  .principles {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .principle {
+    padding: 1rem 1.2rem;
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--muted) 25%, transparent);
+    font-size: 1rem;
+    line-height: 1.65;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  /* ===== 支线陷阱 ===== */
+  .trap-intro {
+    margin-top: 0.9rem;
+    font-size: 1rem;
+    color: var(--muted-foreground);
+  }
+  .trap-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .trap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.95rem 1.2rem;
+    border: 1px dashed var(--border);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease;
+  }
+  .trap-item:hover {
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  }
+  .trap-x {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin-top: 0.05rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted-foreground) 16%, transparent);
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  .trap-text {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  /* 入场动画 —— 仅在不偏好减少动效时启用，避免内容初始不可见 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
