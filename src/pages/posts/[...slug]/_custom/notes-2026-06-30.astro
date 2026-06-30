@@ -1,0 +1,412 @@
+---
+import { type CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import { slugifyStr } from "@/utils/slugify";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 02 · 侮辱/赞美 → 反应（词全部取自原文，仅作装饰性拆解）
+const reactions = [
+  { trigger: "侮辱", effect: "崩溃" },
+  { trigger: "赞美", effect: "膨胀" },
+];
+---
+
+<!--
+  6.30 随想 · 定制设计页
+  设计语言：延续 notes 系列的杂志感。本篇母题——「夺回对自己的掌控」：
+  死亡与体验 / 评价与奴役 / 行为与言语 / 即时快乐与延迟满足。
+  正文逐字取自原文，所有可视化里出现的字也都来自原文，不新增。
+-->
+
+<main id="main-content" data-pagefind-body class="notes">
+  <article class="wrap">
+    {/* ===== Hero ===== */}
+    <header class="post-hero">
+      <p class="eyebrow">随想 · 2026.6.30</p>
+      <h1 class="post-title">
+        <span class="deco-date" aria-hidden="true">6.30</span>
+        人生的意义就是<span class="text-accent">体验</span>
+      </h1>
+      <div class="hero-meta">
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 01 · 人生的意义就是体验 ===== */}
+      <h2 class="chapter reveal" style={{ "--d": "0.05s" }}>
+        <span class="chapter-no">01</span>人生的意义就是<span class="text-accent"
+          >体验</span
+        >
+      </h2>
+      <section class="card statement reveal" style={{ "--d": "0.1s" }}>
+        <p class="statement-quote">
+          如果结局都是死亡，那人生的意义就是<span class="hl">体验</span>。
+        </p>
+        <div class="flow" aria-hidden="true">
+          <span class="flow-from">结局：死亡</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-to">意义：体验</span>
+        </div>
+      </section>
+
+      {/* ===== 02 · 任何开口之人的奴隶 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>任何开口之人的<span class="text-accent"
+          >奴隶</span
+        >
+      </h2>
+      <section class="card slave reveal">
+        <ul class="reactions" aria-hidden="true">
+          {
+            reactions.map(r => (
+              <li class="reaction">
+                <span class="rt">{r.trigger}</span>
+                <span class="ra">让你</span>
+                <span class="re">{r.effect}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="slave-quote">
+          如果一个侮辱能让你崩溃，一个赞美能让你膨胀，你就是任何开口之人的<span
+            class="hl">奴隶</span
+          >。
+        </p>
+      </section>
+
+      {/* ===== 03 · 他的行为就是答案 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">03</span>他的<span class="text-accent">行为</span
+        >就是答案
+      </h2>
+      <section class="card behavior reveal">
+        <p class="behavior-quote">
+          不要强迫别人说真话，他的<span class="hl">行为</span>就是<span class="hl"
+            >答案</span
+          >。
+        </p>
+        <div class="behavior-eq" aria-hidden="true">
+          <span class="eq-a">行为</span>
+          <span class="eq-sign">＝</span>
+          <span class="eq-b">答案</span>
+        </div>
+      </section>
+
+      {/* ===== 04 · 停止分泌廉价的多巴胺 ===== */}
+      <h2 class="chapter reveal">
+        <span class="chapter-no">04</span>停止分泌廉价的<span class="text-accent"
+          >多巴胺</span
+        >
+      </h2>
+      <section class="card dopamine reveal">
+        <p class="dopamine-quote">
+          只有当你停止疯狂分泌<span class="hl">廉价的多巴胺</span
+          >，你错乱的奖赏系统才能<span class="hl">重置</span
+          >，你的大脑才会慢慢——
+        </p>
+        <div class="shift" aria-hidden="true">
+          <span class="shift-from">追求即时快乐</span>
+          <span class="shift-arrow">变回</span>
+          <span class="shift-to">可以接受枯燥<br />可以延迟满足</span>
+        </div>
+      </section>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* ===== 容器 ===== */
+  .notes {
+    --maxw: 46rem;
+  }
+  .wrap {
+    max-width: var(--maxw);
+    margin-inline: auto;
+  }
+
+  /* hero 角落的超大装饰日期，弱化为背景层 */
+  .deco-date {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-end: 0;
+    z-index: -1;
+    font-weight: 700;
+    font-size: clamp(3.5rem, 15vw, 8rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .post-hero {
+    position: relative;
+    padding-block: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 4vw, 2.25rem);
+  }
+  .eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .post-title {
+    position: relative;
+    margin: 0.6rem 0 0;
+    font-size: clamp(1.9rem, 6vw, 3rem);
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--foreground);
+  }
+  .hero-meta {
+    margin-top: 1.1rem;
+    color: var(--muted-foreground);
+  }
+
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* 章节标题（01 / 02 / 03 / 04），与系列其它随想保持一致 */
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 2.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .chapter:first-of-type {
+    margin-top: 0.5rem;
+  }
+  .chapter-no {
+    flex: none;
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+  .text-accent {
+    color: var(--accent);
+  }
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== 通用卡片 ===== */
+  .card {
+    margin-top: 1.4rem;
+    padding: 1.6rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.95rem;
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+  }
+
+  /* ===== 01 · 体验 ===== */
+  .statement {
+    border-inline-start: 3px solid var(--accent);
+  }
+  .statement-quote {
+    margin: 0;
+    font-size: clamp(1.3rem, 4vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .flow {
+    margin-top: 1.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+  }
+  .flow-from,
+  .flow-to {
+    padding: 0.5rem 1rem;
+    border-radius: 0.7rem;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 2.6vw, 1.15rem);
+    white-space: nowrap;
+  }
+  .flow-from {
+    background-color: color-mix(in srgb, var(--muted) 60%, transparent);
+    color: var(--muted-foreground);
+  }
+  .flow-to {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  .flow-arrow {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.3rem;
+  }
+
+  /* ===== 02 · 奴隶 ===== */
+  .reactions {
+    list-style: none;
+    margin: 0 0 1.2rem;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .reaction {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .rt {
+    flex: none;
+    min-width: 3.6rem;
+    text-align: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.6rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .ra {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+  }
+  .re {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .slave-quote {
+    margin: 0;
+    font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+
+  /* ===== 03 · 行为 ===== */
+  .behavior {
+    text-align: center;
+  }
+  .behavior-quote {
+    margin: 0;
+    font-size: clamp(1.15rem, 3.2vw, 1.45rem);
+    font-weight: 600;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .behavior-eq {
+    margin-top: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  .eq-a,
+  .eq-b {
+    padding: 0.6rem 1.3rem;
+    border-radius: 0.75rem;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  }
+  .eq-a {
+    background-color: color-mix(in srgb, var(--muted) 60%, transparent);
+    color: var(--foreground);
+  }
+  .eq-b {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  .eq-sign {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.5rem;
+  }
+
+  /* ===== 04 · 多巴胺 ===== */
+  .dopamine-quote {
+    margin: 0;
+    font-size: clamp(1.05rem, 2.9vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.85;
+    color: var(--foreground);
+  }
+  .shift {
+    margin-top: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 1.4rem 1.2rem;
+    border-radius: 0.85rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+  .shift-from {
+    color: var(--muted-foreground);
+    font-weight: 700;
+    text-decoration: line-through;
+  }
+  .shift-arrow {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .shift-to {
+    text-align: center;
+    font-weight: 800;
+    line-height: 1.55;
+    font-size: clamp(1.1rem, 3.2vw, 1.45rem);
+    color: var(--foreground);
+  }
+
+  /* 入场动画 —— 仅在用户不偏好减少动效时启用，避免内容初始不可见 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
