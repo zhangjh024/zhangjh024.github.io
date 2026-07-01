@@ -21,6 +21,7 @@ import Notes20260626 from "./_custom/notes-2026-06-26.astro";
 import Notes20260629 from "./_custom/notes-2026-06-29.astro";
 import LifeMainQuest from "./_custom/life-main-quest.astro";
 import Notes20260630 from "./_custom/notes-2026-06-30.astro";
+import Half2026 from "./_custom/half-2026.astro";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -90,6 +91,7 @@ const customRenderers: Record<string, typeof TenXProgrammer> = {
   "/notes-2026-06-29": Notes20260629,
   "/life-main-quest": LifeMainQuest,
   "/notes-2026-06-30": Notes20260630,
+  "/half-2026": Half2026,
 };
 const CustomPost: typeof TenXProgrammer | undefined =
   customRenderers[getPostSlug(post.id, post.filePath)];

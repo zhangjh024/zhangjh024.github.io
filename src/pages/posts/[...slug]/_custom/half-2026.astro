@@ -1,0 +1,1889 @@
+---
+/**
+ * 《2026年已走过一半》的定制设计页（slug: half-2026）。
+ *
+ * 全篇为四段随笔/摘录的合集，文字全部逐字取自原文：
+ *   一、2026年已走过一半：8个问题（原创，年中自问，全篇点题）
+ *   二、普朗克知识（查理·芒格最爱讲的寓言 + AI 时代的两种知识）
+ *   三、ai 时代，认知才是最重要的（收录自唐杰THU）
+ *   四、九类自省（收录整理的自省语录，154 条）
+ *
+ * 装饰性可视化元素（对比卡/进度条/编号）均 aria-hidden，纯排版重排不新增文字。
+ * SEO / 列表 / RSS / OG 走 md frontmatter。由 [...slug]/index.astro 的注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 全篇 4 段导航
+const parts = [
+  { no: "一", id: "sec-1", name: "2026年已走过一半：8个问题" },
+  { no: "二", id: "sec-2", name: "普朗克知识" },
+  { no: "三", id: "sec-3", name: "ai 时代，认知才是最重要的" },
+  { no: "四", id: "sec-4", name: "九类自省" },
+];
+
+// ===== 一 · 8个问题（原文逐字）=====
+const compare = [
+  { name: "复盘", desc: "在总结" },
+  { name: "提问", desc: "在校准" },
+];
+
+const questions = [
+  {
+    no: "01",
+    q: "这半年，我有没有更接近自己想成为的那个人？",
+    d: "不是完成了多少 KPI，而是我有没有更像「对的人」。如果你还不知道那个人是谁，这可能就是你下半年最该想清楚的事。",
+  },
+  {
+    no: "02",
+    q: "我的工作让我更自由了，还是更像在给自己打工？",
+    d: "很多创业者忙到最后，发现自己只是给自己当了一个更严厉的老板。自由不是不干活。自由是你能选择干什么，也能选择不干什么。",
+    vs: ["更自由", "给自己打工"],
+  },
+  {
+    no: "03",
+    q: "我有没有沉淀出一个新的能力，或者一个可复用的作品？",
+    d: "如果忙了半年，但没有多出一个方法、案例、工具，可能说明你只是在重复消耗。",
+  },
+  {
+    no: "04",
+    q: "有没有人因为我做的事，变好了一点点？",
+    d: "可以是客户，读者，也可以是朋友。如果有，说明你确实在创造价值。如果想不出来，下半年就要换个方式了。",
+  },
+  {
+    no: "05",
+    q: "我做过的东西里，有哪些半年后回看还觉得不错？",
+    d: "这个问题能帮我区分「交付」和「作品」。交付做完就结束。作品放在那里，还会继续有价值。",
+    vs: ["交付", "作品"],
+  },
+  {
+    no: "06",
+    q: "这半年赚的钱里，哪些让我更有选择权，哪些只是买走了我的时间？",
+    d: "钱也分两种。一种让你更自由。一种让你更被绑住。想清楚比例，下半年就知道该怎么调整了。",
+    vs: ["更自由", "更被绑住"],
+  },
+  {
+    no: "07",
+    q: "我有没有因为钱，做过自己其实不想做的事？",
+    d: "诚实回答。大部分人每半年都会有一两个后悔的决定。承认它，才知道自己的底线在哪。",
+  },
+  {
+    no: "08",
+    q: "下半年唯一最重要的一件事是什么？",
+    d: "注意，是唯一。不是三件，不是一组目标，就一件。",
+    final: true,
+  },
+];
+
+// ===== 二 · 普朗克知识（原文逐字）=====
+const kinds = [
+  {
+    tone: "real",
+    name: "普朗克知识",
+    desc: "真正搞懂、付出过代价的真知",
+  },
+  {
+    tone: "fake",
+    name: "司机知识",
+    desc: "只学会了名词、靠模仿和背诵来假装懂了的表演",
+  },
+];
+
+const criteria = [
+  { no: "01", tag: "追问", q: "能不能回答直击痛处的追问？" },
+  { no: "02", tag: "反例", q: "面对逻辑反例时，能不能给出合理的解释？" },
+  {
+    no: "03",
+    tag: "边界",
+    q: "知不知道自己的认知边界在哪里，并坦然承认“我不知道”？",
+    important: true,
+  },
+];
+
+// ===== 三 · ai 认知（原文逐字，收录自唐杰THU）=====
+const locks = [
+  {
+    no: "01",
+    era: "20年前",
+    name: "商业模式局",
+    desc: "发现社会一个新需求，砸钱把模式包圆，不让别人进来，纯资本起了最大作用",
+    who: "资本大腕或管理高手",
+  },
+  {
+    no: "02",
+    era: "10年前",
+    name: "产品局",
+    desc: "设计一个粘住用户的心理/生理模式，游戏也行、视频也行、聊天也行，总之粘住就好、dau大就好",
+    who: "产品经理",
+  },
+  {
+    no: "03",
+    era: "现在",
+    name: "ai局",
+    desc: "openai和anthropic这两年的反复拉锯、轮流领先，一再说明ai时代的本质就是技术的快速进步",
+    who: "具有超前认知的 ic",
+    highlight: true,
+  },
+];
+
+const agiNeeds = [
+  "对agi的极度热衷与笃定（极强的第一性思维）",
+  "对技术的深厚积累与细节把控",
+  "一群不内耗/不墨迹、简单纯粹的人",
+];
+
+// ===== 四 · 九类自省（收录整理，原文逐字，154 条）=====
+const groups = [
+  {
+    no: "01",
+    id: "sec-4-01",
+    name: "自我修炼",
+    items: [
+      `你是在松懈状态还是在挑战状态？（这是第一条微博）`,
+      `人常会不自觉地记下对自己有利的部分，这是形成委屈的重要原因。`,
+      `做不好的就别做了，要做就必须做到非常好。`,
+      `应该让肾上腺素和理智一起发挥作用。`,
+      `有感：人生的差距就是在自我感觉良好中拉开的——与朋友共诫勉。`,
+      `不停地想应该如何让未来更精彩。`,
+      `谦虚的人能看到自己的不足，自信的人能在知道不足的情况下依然积极。`,
+      `关于消费：买书、健身、学习都属于资金成本边际成本很低，对于很多人，只要你能真正完成这些消费，资金都不是主要成本而值得大力投入的消费。综上，我非常建议大家买书、买电子书、ipad、智能手机、买健身卡、游泳卡……还有类似的消费吗？`,
+      `多修炼，期早达：耳顺、知天命、从心所欲不逾矩。想起一个朋友的 msn 签名：三十耳顺，当时没注意，现在想到已经了不起了，提前了一半。`,
+      `写完文档准备睡觉，想起今天看的《facebook 效应》，突然想起《普通生物学》介绍的一个物质：多巴胺。最近愈发想起人与人之间状态区别，是否有激情，是否自我激励，是否是由这类物质的代谢水平决定了基本面。肖恩. 帕克是多巴胺水平很高的典型？`,
+      `快到 30 岁了，感觉这几年又再重新学习 / 补习本应在青少年时间学习的东西：如何阅读、如何了解自己、如何与人沟通、如何安排时间、如何正确的看待别人意见、如何激励自己、如何写作、如何坚持锻炼身体、如何耐心。`,
+      `习惯：把要做的事情迅速分配在 calendar（日历）上，会变化没关系，多调整。`,
+      `你最终会成为你想要的样子 — 如果你真的非常想。虽然听起来有点违心，但是强大的愿望确实非常重要。`,
+      `关于勤奋，就我所知，罕有成功者不是工作时间极长的：通用电气的 CEO 每周工作一百小时，坚持了至少十年。巴菲特为了最早看到次日的华尔街日报，经常在凌晨四点去取报纸。勤奋不是一种形式，而是一种心理状态：享受挑战极限的过程，保持热情和好奇心，坚持不懈。`,
+      `自我实现，自我修炼是最高层次。`,
+      `说到自我修炼，由于懒惰 (体力的、思考的、情绪的) 是万恶之源，所以修炼很多时候就是在克服惰性。`,
+      `向成功找方法和为失败找理由也是人的一个方面的两种习惯和素质。`,
+      `当某人开始深入认识自己、研究自己的时候，说明此人开始有了哲学的思考，预示着此人开始迈入一个新的人生阶段。`,
+    ],
+  },
+  {
+    no: "02",
+    id: "sec-4-02",
+    name: "延迟满足感",
+    items: [
+      `延迟满足感程度在不同量级的人是没法有效讨论问题的，因为他们愿意触探停留的深度不一样。`,
+      `谋事不求易成，具备强烈的成功动机和韧性才能成功。`,
+      `路径依赖的强弱可表征延迟满足感。`,
+      `练习保持耐心，即使是快节奏和压力的情况下。`,
+      `与智慧的常见敌人：未延迟的满足感，经验带来的麻痹或恐惧。`,
+      `三年前和朋友聊天，问他对合作者、对人才看重什么，其它点我已经记不住了，唯记住：不装 B。当时楞了一下，随后越发觉得有道理。经常要提醒自己，这也是延迟满足感的一种锻炼。`,
+      `最近 IPO 的公司一堆一堆的，但是大家一定要耐得住寂寞，他们今天的成功是他们的过去已经决定的，属于他们。我们的成功是我们的现在和将来决定的。我发现很多事情经常是这样的：今天和明天已经由昨天决定，你还可以决定后天。`,
+      `不满足之后有几种反应：努力提高自己；尝试安慰自己；YY&YY；抱怨牢骚记在其他人身上。`,
+      `凡事就怕不认真，不思考。好多问题我应该能知道的，只是之前没有认真看，认真想，想当然（不是没时间）。延迟满足感是一项长期修炼。`,
+      `今天晚上的时候，每个周五晚上下班的时候，我常会和同事说：我明天假期我们再把 xxx 做好。每次突然想这句话矛盾啊，不能这样要求。嗯，生活工作要平衡。不过，别人腐败的时候我们在努力，别人消磨时光的时候我们在学习，那么延迟的满足一定会厚积薄发来到。`,
+      `延迟满足感经验：含蓄情绪，让自己静止，不要在沟通交流的时候走动、晃动，情绪跳动，思维失去精确控制。`,
+      `延迟满足感和坚决告别惰性是“优秀”的最重要两块基石。`,
+    ],
+  },
+  {
+    no: "03",
+    id: "sec-4-03",
+    name: "学习",
+    items: [
+      `遇到一本好书很愉快和遇到一个非常值得交往的朋友是相似的。`,
+      `听说有人每天能看一本书，问题还不在看书速度，而是在知易行难，实践的速度赶不上所知的要求，欠账很多。`,
+      `你们读了哪些传记？想起 2 年前朋友说：如果不知道让小孩阅读什么，最适合的就是传记。最近在思考与回忆：关于品格、理想、动机的形成，觉得确实如此。`,
+      `晚上看书，看书 — 带着悔恨的心情和克制悔恨的努力。`,
+      `看完《如何阅读一本书》这一章：如何做一个自我要求的读者。也即阅读应该是有自我要求的具主动状态的。阅读两字换成其它很多词也适用。`,
+      `《如何阅读一本书》一书在谈技能之外，更多的是讲学习的态度和沟通的方法。比如赞同和反对作者这一章，其实标题亦可写为，关于沟通的赞同和反对。`,
+      `终于把《如何阅读一本书》阅读完了。美国人就是认真，把阅读的问题方法刨根究底。这不是一本资讯娱乐类的书，是需要和增进理解的书。中文版翻译的不好。`,
+      `一次别以看一本为目标，比如看 5 页为目标，当下的力量 0.1>>0 @反思的陈韬 关于自己无法耐心看书的问题：如果说哪里来了一个高人每次都会听得很仔细，听完以后觉得很有收获；而看书则是完全不同的心情了，电脑里的经典书籍对翻天了却从来没有仔细翻过，真是书非借不能读啊。真是应该给自己一个规划，用看待约会和讲座的心情来看待每一次阅读。`,
+      `想学的东西很多，吾生有涯知无涯，以有涯追无涯，怠也。有两种理解，积极的理解是应该有优先级的规划学习。`,
+      `研究聪明人如何犯错误，回报率很高。聪明人易犯错误包括：嫉妒他人成功；自命不凡；过于相信自己判断；停止学习；认为世界是静止的，生活在过去荣耀中；任何事情都有自己一套言之有据、且深信不疑的说法和理论：忘记了没有调查研究，就没有发言权。你符合吗？`,
+      `今天早点睡，明天早上起来看书。本周的学习计划快完不成了。创业过程中不断的学习又能尝试是感觉很好的体验。`,
+      `好的问题就是一半的答案。`,
+      `知行合一真难，中间差的是什么？`,
+      `在知乎上看到很多 IT 行业聪明思考的人的思考，密度很高；感觉是氛围尚不是模式带来的；喜欢和聪明思考的人共处。`,
+      `哈佛有一个著名的理论：人的差别在于业余时间，而一个人的命运决定于晚上 8 点到 10 点之间。每晚抽出 2 个小时的时间用来阅读、进修、思考或参加有意的演讲、讨论，你会发现，你的人生正在发生改变，坚持数年之后，成功会向你招手。`,
+      `互联网让会学习爱学习的人和相反的差距拉的更大，这并不仅限于互联网行业。只不过互联网行业这种趋势先开始而已。现在好多初中生、高中生比大学生、博士生还博学。我见过 2 个中学生，自己用 wiki 整理所学过的，自学的各种知识。我怎么生的这么早……`,
+      `“很奇怪”“很诡异”“太奇怪”，有这些想法说明自己还不懂，而且常常还想把原因归咎于“奇怪”以 release。没有什么太奇怪的东西，仔细去找学习的途径，你常常能找到。`,
+    ],
+  },
+  {
+    no: "04",
+    id: "sec-4-04",
+    name: "坦诚 沟通 信任",
+    items: [
+      `当感到沟通困难的时候，最好的沟通方法不是想太多技巧和说法，而是：更坦诚的沟通。`,
+      `沟通中没听明白的话，常因为这些话用了“这个”，“那样”等代词，或笼统的名词，含糊的形容词、副词、量词替换掉往往“本身还模糊或有分歧的内容”。虽然句子是完整了，但是意思不清楚。然而如果替换的部分是清楚的，并不会听不明白。你要做的就是抓住这个词，还给他们。`,
+      `短期交往说话忽悠会有溢价，长期交往说话实在会有溢价。`,
+      `沟通，听一个人说话：你是否知道他在说什么，你是否知道他知道他在说什么，你是否知道他们知道他在说什么。`,
+      `今天和同事的讨论效率，说到表达模糊影响效率和沟通的问题。很有同感，我一直就觉得类似以下含糊说法在工作中应避免：“应该差不多吧 过两三天大概就可以了 估计再要一点时间就接近好了，这个东西也还行吧，最好能 xxxx 吧，差不多也都行我过一段弄一下这样也还是可以的。”`,
+      `避免的常用含糊词：“难免会”，“差不多都这样”。`,
+      `一连串有想象力且恰当的比喻连续使用是讲道理的好方法。`,
+      `昨天和朋友聊天，总结到：在这个信息流动越来越快越来越透明的社会，从经济的角度来看，做一个表里不一的人成本越来越高，龌龊的人会越来越倒霉，不装不但是一个道德品性优选，而且也是更经济的。很多人还未意识到这点。`,
+      `上午北京大学周其仁教授发言非常精彩。他认为一个持久得到别人信任的人，收入就越高。有比知识、技能更加重要的东西，那就是信任。他们的团队在研究了农民工的收入以后发现，收入最高的人，往往并不是体力最好、技能最好的时候，而是最受信任的人。所以，成为一个受人信任的人，非常重要。`,
+      `最近感想：口碑很重要，人品很重要，信用很重要，越老越重要，原则要坚定。`,
+      `上帝不可能骗得了我，因为所有的欺骗都有漏洞——笛卡尔。`,
+      `昨天父亲节，和爸妈视频聊天，他们在广东经商，这几年竞争压力、内部意见纠纷不小，有时想建议他们别经营了，退休养老，但办公司往往欲退不能。昨天爸爸说还想投入更多一搏，我想既然劝退不行不如鼓励他放手一搏，信任就是鼓励。我不能回去帮忙就要把自己的事情做好，让他不要有担心。`,
+    ],
+  },
+  {
+    no: "05",
+    id: "sec-4-05",
+    name: "理性",
+    items: [
+      `今天会谈提到感性理性，我的观点：感性深化放在深处，理性实化放在前锋。`,
+      `做个理性人，很多事情就不必做。感性做人，理性做事的态度有其意义。`,
+      `今天公司进行读书交流会，其中提到《别做正常的傻瓜》一书，大家对是否理性的态度有分歧。`,
+      `寻找错误或者问题可以从发现自我矛盾点做起，如果能理性地使用逻辑。`,
+      `老子说祸兮福之所倚，福兮祸之所伏。幸运的时候不要忘形，失意的时候也不要绝望，相信事情总会有转机。那这句话是唯心的还是唯物的呢？当然是唯物的，告诉你忘形和失意都无助于事，做有意义的事情，关注事情的变化。`,
+      `很多时候不是不理解，甚至不是认识不到，只是不愿意深刻认识到这往往还是隐隐的主观在作怪。`,
+      `低落的状态时情况往往没有感受的难，松懈的时候其实不如想象的容易，人往往难理性。`,
+      `高中刚开始学物理的时候，老师反复强调不要想当然、凭感觉，应该要推理。其实线性思维是常见的一种想当然，也许许多事物的常态是类线性的，但是常态或者普通事物往往不是关键，需要面对的情况往往是非常态，所以要注意避免“线性地”想当然。`,
+    ],
+  },
+  {
+    no: "06",
+    id: "sec-4-06",
+    name: "选择",
+    items: [
+      `选择比努力更重要，观念比选择更重要。`,
+      `经验：当无法选择或判断的时候，离远一步，用更重要的原则和更长的时间尺度来衡量就清楚了。`,
+      `今天听王兴演讲的比喻：人生，和谁一起在路上，看什么风景。我最近也是在想，以后要让小孩多看看传记，包括电视剧《阿信》那样的也可以，看看别人的风景和旅程，更容易想清楚自己的选择。`,
+      `参考别人的意见，只是判断线索，不可作为决定的决心。`,
+      `“独立思考忠实于自己的内心”“越朴素不虚荣所做出的选择会越实际而可行”。`,
+      `坚持原则很多时候是经济的，可以看做是一种短期浮亏的长期受益的投资。`,
+      `既会庆幸做了什么，也会庆幸没做什么。`,
+    ],
+  },
+  {
+    no: "07",
+    id: "sec-4-07",
+    name: "激情 专注力 自信",
+    items: [
+      `保证足够睡眠是积极高效的第一步。`,
+      `加强专注力训练，它是优先级管理的保证，同时持续专注力的一个基础是体力和精力，锻炼修炼。`,
+      `发现保持体力充沛、精力旺盛是一项基础工作。`,
+      `最近三个月身体锻炼的进展：腰背少严重疼了，一次跑五公里，一次游一公里都很轻松了。近期目标，自由泳学习中，健身学习中，羽毛球提高。`,
+      `系统地运动锻炼需要抗身体的惰性，锻炼久了之后不但身体好而且锻炼的积极性也好容易启动养成习惯，最近觉得读书学习也很类似。`,
+      `卓有成效如果有什么秘诀的话，那就是善于集中精力。——《卓有成效的管理》`,
+      `最近重读到稻盛和夫的《活法》，其中提到专注投入，其中举的陶瓷工艺改进的例子尤其令我印象深刻。我们做每一件事（写一段程序，写一封邮件，写一个策划）的时候是否在想自己是否投入全力以赴的认真做了，结果真的不一样？请试试：你能有多专注？`,
+      `强烈的动机比方法更根本。`,
+      `注意力也可以开源节流的，欲望和杂念分散注意力要节流，锻炼身体和注意力训练是开源。`,
+      `年轻人不要试图追求安全感，特别是年轻的时候，周遭环境从来都不会有绝对的安全感，如果你觉得安全了，很有可能开始暗藏危机。真正的安全感，来自你对自己的信心，是你每个阶段性目标的实现，而真正的归属感，在于你的内心深处，对自己命运的把控，因为你最大的对手永远是自己。`,
+      `人不逼一下自己，永远不知道自己潜力有多大。很多事情非不能也，是不为也。`,
+      `一个困扰我们很长的时间技术诡异问题，同事们这两天集中时间集中精力分析、求助、排查、尝试终于解决。想起稻盛和夫的说的：用尽全力，异常认真，神明就会来相助。其实神明未必相助，但是你会更接近问题的本质，从而解决问题。`,
+      `应届生应该推崇自信，诚实，努力，相信成功可通过学习和努力获得。别太讨巧，走捷径。事实上面试大多不是因为技能不行，而是人品和性格不行。`,
+      `以前一直都没觉得做人自信很重要，现在发现越来越重要。惰性、依赖、拖拉、保守很多也都是不自信导致的。自信的人自然会和自我高要求联系起来。`,
+    ],
+  },
+  {
+    no: "08",
+    id: "sec-4-08",
+    name: "做事 执行力",
+    items: [
+      `将事情做满，还是将事情做好，其实是很不一样的。我们容易看到将事情做满，但是容易忽略把事情做好。`,
+      `指标系统：为什么刷牙不能坚持认真刷，为什么在跑步机上能坚持跑步。有许多事情不容易做好和不被重视的原因就是因为没有指标系统。比如，如果健康有准确方便度量的指标，那么大家的身体素质一定会提高。但是指标不见得好提炼，提炼指标的过程，本身是分解事物特征的过程。而且指标要常测量。比如说：当我今天发现眼睛度数上升 100 度的时候，才发现眼睛过疲劳了，用眼不注意了，在手机上看书是非常不恰当的行为。关键是今天才知道哇……`,
+      `改变你目前能改变的，专注到 circle of influence（影响圈）：现在最重要的 — 放松，睡觉去。`,
+      `大多数人，确实一开始就想绕过困难。好的问题就是一半的答案，剩下一半答案就是奋斗。`,
+      `我去年自己有一个感想：觉得之前的老板都对我不太苛刻啊。否则我当时能做的更好。当然很可能是他们认为，已经做的好，太苛刻人就跑了，其实对于会自我驱动的人是不会的。`,
+      `我最近经常问自己：马上有什么可行动，你是行动派吗。很多问题它不会消失，不动 (犹豫 / 抱怨 / 感叹) 肯定是错误，行动就有力量，哪怕是行动的准备行动，唯有行动才能改变事情。`,
+      `执行力到底是什么？我认为的执行力是：说到做到，不找借口，完成别人都能完成的事。而更强的人可以做到：完成别人完不成的事。同样的一件事，交给不同的员工，会有不同的结果，完不成的人都会有各种理由来说服自己说服领导，将一个小困难由点到面扩大化看待。做一个 NB 的人，从此刻开始，不再找借口。`,
+      `执行力这个词一度很流行，在我理解来看就是态度和能力。不断筛选和提高大家的态度能力就是提高执行力。`,
+      `某项较长时间不如人意的工作，终于有了起色，耐心很重要。凡事都有原因，只要认真找原因并努力改进，就会有效果。`,
+      `稻盛要辞职离开快倒闭的公司，遭兄长棒喝：“在这样没人干活的公司你都做不出点成绩来，你还能干什么？2. 洛克菲勒感觉再也无法忍受日复一日枯燥的工作，提出换岗，遭主管冷言“要么好好干、要么另谋出路”。同样的道理，不同的说法，却像雷一样击中并成就了两个商业巨匠。还是那句，不抱怨、想方法。`,
+      `很多事情都是这样既没有你设想的容易，也没有你想象的难。睡觉……`,
+      `用心认真的折腾是没有风险的。`,
+      `不抬杠，要抓住主要问题，任何办法都是在一定时空下对真理的近似实现，时空条件越具体，办法就越有效。如果去抬杠“近似”，那么就更难在这个时空条件下实施。`,
+      `想做的事情太多，经常要抑制自己的激动。`,
+      `牛逼的人找方法，傻逼的人找借口。`,
+      `很多复杂问题是更高维度简单问题的投影，比如说打篮球动作变形、速度慢、配合差是很多时候体力不行；写程序烂、bug 多、时间长是抽象分解问题做的不好；还有比如海军说的“很多管理问题都是假象，本质是能力问题”。而解决这些本质问题需要更大代价和决心的。`,
+    ],
+  },
+  {
+    no: "09",
+    id: "sec-4-09",
+    name: "人生 成长 反思",
+    items: [
+      `关于感性，或忧或悲，但你看到人生不容易十之八九，当你看到生活的真实面目时：你会悲，但就不会因表象而伤感；你会喜，也不会而浮华而极乐。生活中有时候猛然听到残酷而又真实有穿透力的话，看到本有违世界观而又有理的书，直到你自己会下意识的去看生活本来面目，你的感性就变化了。`,
+      `玩德州扑克看人性的弱点：贪玩（一开始拿烂牌但是不 fold）、侥幸（希望等低概率事件）、不能舍（因过去付出而不放弃）、过度概括（只看一个例子就下结论）。其实，德州扑克和人生一样：应该：理解不确定性、专注有可能的事情、理智评估概率、能舍才能得、避免意气用事。`,
+      `一件事情上，在心里想对方自私的时候，想一想自己：多数发现自己也蛮自私的。在骂对方贪婪的时候，想一想自己：多数发现自己也同样贪婪。`,
+      `今天手机报上有一段话：“独处是一次心灵按摩”静坐在斗室里，漫步在小道上，平躺在沙滩上……有意识的面对自己，和内心对话。喜欢独处的人，和别人在一起时，往往也会处理的更好。交流和独处相辅相成，才能让内心成熟和强大。`,
+      `我今天的处境都是因为我有些应该做的事情我没有做，不应该做的事情我就全做，所以要改变现状，就要从自己开始。`,
+      `乔布斯说 stay hungry，我以为饥渴有三个层次：贪婪、成就动机、好奇心。三者分别关注：瞬间的结果，持续的过程，和远大的未知。三者也恰好对应了三种人：卑劣的投机者，艰辛的攀登者，与幸福的探索者。`,
+      `有不少留言说不理解这段话。研究快乐的专家告诉我们：快乐有三种：pleasure（欢乐）,passion（热情）,higher purpose（理想、有意义）. 其中欢乐是最短暂的，热情其次，而最长久的是理想。`,
+      `做减法最不容易也最容易。`,
+      `现在年轻人部分流行把三四十岁退休作为理想，我不认同，我觉得理想是一直有机会创造、实现想法，有机会学习，修炼，创造到老。为什么会想退休？想退休说明你认为现在是在“忍”。我还有很多很多想法想做，希望三四十岁更多条件去实现想法。`,
+      `人群总有一些人 xx 素比普通人高(很好)，有精神，有斗志，爱学习，爱创造，爱折腾。下午和一个在某顶级互联网公司的老朋友聊天，他又要出来创业了。`,
+      `发现最近，不论是一起公司的同事，或是投资人，还是老同学都不约而同提到一点：过去一年，我变化很大。我相信他们是能感觉到或者观察到，但是变化的心路只有自己才知道，所以自己觉得很自然。`,
+      `生活中不是缺少美，而是缺少分享。`,
+      `很多很好的想法自己都非常认真，现在都被人实现或者通往实现的路上了。真希望自己能分身体几个同时努力，这样人生多精确。但是分身是不可能的，所以只能根据情况排优先级；找到志同道合的人。`,
+      `今天 M.A.D 会议，听到一个关于 SEO 人物介绍，提到某人非常洒脱。我对人物介绍倒没有感觉到特别。但是对洒脱这个词，突然有点感想。效率和竞争往往把人变得很精确、严谨、注重细节、强调计划和控制，这些都没错，但是大家要注意保留一份洒脱，性格和人生观别职业带入另一个胡同。`,
+      `通货膨胀正在洗劫你的钱包，同学问怎么办？三个办法，一是尽可能地提高家庭负债率，当今之世能借到钱的就是英雄；二是配置资源性财产，能够抵抗通涨的只有三个东西，黄金、房产和农产品；三是象傻瓜一样的长期持有，眼前的涨跌都是对耐心的考验。除非天下大乱，否则以上三条应是规律。`,
+      `在不来劲的时候来劲，在太来劲的时候淡定。`,
+      `有百分之多少的把握你会开始创业，有多深的感觉你会对另外一个人说我爱你，有多么的确信会让你有精神上的信仰。你不必等一切都 100% 确定了才开始创业, 去爱一个人和建立信仰.。其实我们的确信度永远达不到 100%, 那么你会一直等吗？今天, 你如果不做一个肯定的决定可能会失去得更多。`,
+      `最贵的是“学费”。`,
+      `如果给过去 5 年的自己一个建议，就是激进再激进一点。`,
+      `快 50 岁，思路清晰深入，细节敏感，执行又高举高打，很好地控制自己情绪。晚上参加活动看到别人的优点。`,
+      `看缺点有难度，权衡缺点看优点更难；避免犯错有难度，接受犯错比成功更难。`,
+      `一个人在他的信仰上站得越不牢固，他就越要用双臂紧紧抱住那些使之区分于其他信仰的教条不放；相反，一个人在他的信念上站得越牢固，他就越可以自由地把双手伸向那些与他信仰不同的人。——弗兰克，早安，各位。`,
+      `不断给自己小的承诺并努力达到。Be Proactive（积极主动）的修炼方法之一。`,
+      `喜欢最近地铁里的一句广告词：we trust learning。`,
+      `平庸有重力，需要逃逸速度。`,
+      `不怕犯错误，不怕坏方法，甚至不怕坏习惯。只要你会自我改正。你的习惯改正吗？`,
+      `单身的人是有一些好处的，比如更多自由独立思考的环境和时间，孤独往往使人更加深邃和广阔，非单身的人想想如何避免非单身的缺点。`,
+      `今天见了一个 5 年未见的同学和半年未见的同学。期间有位同学说工作生活最近很没意思。其实 5 年变化已经很大，不过我觉得还不够大，生活的意思完全可以自己找，自己改变人生意思就很大。不要等意思来找你。借用奥巴马的话说“change，yes we can”。`,
+      `未雨绸缪其实很难的，大多数情况都是事情推人走，而且往往能容易被推动的人已经不错了。`,
+      `非常同意自控力（也就是反惰性）是优秀的标准。确实马拉松不是高标准，思维意识情绪的自控更难。`,
+      `昨天公司内部做时间管理的交流，是我推动大家的。不过说实话惭愧，最近 2、3 周我自己的时间管理的目标下降了。惰性是万恶之源。从今天开始又有意识地加强了。`,
+      `只有当你离开自己的舒适区时，你才会挑战自己的极限。`,
+      `“积极主动”是广泛优秀的素质的基础。`,
+      `看年轻人的潜力，看他周末几点起，周末在干嘛，下班在干嘛。甚至不一定要干嘛，只要看想些什么。`,
+      `有人问比尔盖茨：什么是你最大的恐惧？盖茨回答：我最恐惧的是那些正在破车库里没日没夜捣鼓新名堂的年轻人。`,
+      `对很多事情我挺有自己观点和想法，目前不能解决问题，没有效果，所以不应该去展开和评论，要想想现在能有效果和价值的事情。我甚至时常要提醒自己：你这样想是没有错的也是没有用的，赶紧做许多又很有用又没有错的事情。`,
+      `最近感觉忙碌多，思考学习反省又少了，观察问题也不够深入和耐心，在 speed up 和激动干劲足的时候，保持一份 slow down 的心态很重要。`,
+      `对现实隐忍，对未来有期待，在当下有作为。`,
+      `内向但精力充沛有企图心的人。性格内向的人更易成功：美国 MSNBC 网站报道称，一项研究发现，内向害羞大多与生俱来，而且，内向的人在工作中更容易成功。在做决策时，他们愿意花大量时间思考，不喜欢闲扯其他的话题，更能专心致志地奔着一个目标努力，因此他们成功的几率也相应增大。`,
+      `人欲望太强的时候就容易短视，太自我中心的时候就容易盲目。`,
+      `常说机会总是青睐有准备的人，其实更多时候是机会已经来了只是还没凸显，往往自己没珍惜。`,
+      `所谓门槛，过去了是门，过不去则是槛；人生的悲哀往往是，你想两肋插刀，刀却只有一把；怀旧，不是那个时代有多好，而是那时你年轻；觉得不快乐，是因为我们追求的不是“幸福”，而是“比别人幸福”；两人的感情就像织毛衣，建立时一针一线，拆除时只需轻轻一拉。`,
+      `成熟感悟：成熟就是从 inside-out 更多的变成 outside-in，就是在需要时常能变成忍者神龟，在另一些时候又能变成动感超人。`,
+      `人生吧，0 岁出场，10 岁快乐成长；20 为情彷徨；30 基本定向；40 拼命打闯；50 回头望望；60 告老还乡；70 搓搓麻将；80 晒晒太阳；90 躺在床上；100 挂在墙上。`,
+      `人生的本质是追寻自我的提升。包括思想、能力、意志等等。这些发展好了，一切随之而来。偏偏大多数人追求的是短期的公司、职位、薪水，运气好的能有所发展，运气差的会迷失方向流于平庸。`,
+      `周末参加一个朋友婚礼，发现新郎最近去了中央某监管机构的信息处，博士新娘回到新郎故乡担干部。他们已经两地分居 5 年了，为了珍惜机会还要继续分开。这样我是做不到的，也不赞同，人生在世就应该尽可能实现价值、体验生活，为了静态的收益而去“忍”损失生活，损失很大，不是创造的人生。`,
+      `不爱表达观点的人总是容易被人认为没想法不聪明，而部分强势之人更爱发表意见所以看其他人大多不如自己聪明，以其中爱发表关于他人是否聪明的意见之人为甚。`,
+      `聪明还耐心是有一些矛盾的优点，同时具备两点的人却非常优秀。`,
+      `一点不要含糊，含糊代表着侥幸、代表着自我欺骗、代表着自我感觉飘然。`,
+      `我给自己贴了创业、技术、管理、创新、自省标签`,
+    ],
+  },
+];
+
+const nrTotal = groups.reduce((n, g) => n + g.items.length, 0);
+---
+
+<main id="main-content" data-pagefind-body class="half mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-6 sm:pt-10 sm:pb-8"
+    >
+      <span aria-hidden="true" class="deco-hero select-none">半</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.22em] uppercase"
+      >
+        年中随笔 · 摘录合集
+      </p>
+
+      <h1
+        class="reveal mt-3 text-3xl leading-tight font-bold sm:text-5xl"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        {title}
+      </h1>
+
+      {/* 年度进度条：50% 实心，点题「已走过一半」 */}
+      <div class="year-bar reveal" style={{ "--d": "0.08s" }} aria-hidden="true">
+        <div class="year-bar-track">
+          <div class="year-bar-fill"></div>
+        </div>
+        <div class="year-bar-labels">
+          <span>上半年</span>
+          <span class="year-bar-mid">50%</span>
+          <span>下半年</span>
+        </div>
+      </div>
+
+      <p class="lead reveal" style={{ "--d": "0.12s" }}>
+        今天是7月1号，2026年刚好过了一半。
+      </p>
+
+      <div
+        class="reveal text-muted-foreground mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.16s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 全篇四段导航 ===== */}
+      <nav class="toc-main reveal" aria-label="四段导航">
+        {
+          parts.map(p => (
+            <a href={`#${p.id}`} class="toc-main-chip">
+              <span class="toc-main-no">{p.no}</span>
+              <span class="toc-main-name">{p.name}</span>
+            </a>
+          ))
+        }
+      </nav>
+
+      {/* ================================================= */}
+      {/* 一 · 2026年已走过一半：8个问题 */}
+      {/* ================================================= */}
+      <section class="part">
+        <header class="part-head" id="sec-1">
+          <span class="part-no" aria-hidden="true">
+            一
+          </span>
+          <h2 class="part-title">2026年已走过一半：8个问题</h2>
+        </header>
+
+        <p class="para">
+          今天是7月1号，2026年刚好过了一半，分享我每半年都会问自己的8个问题。
+        </p>
+
+        <div class="q-compare" aria-hidden="true">
+          {
+            compare.map(c => (
+              <span class="q-compare-item">
+                <span class="q-compare-name">{c.name}</span>
+                <span class="q-compare-desc">{c.desc}</span>
+              </span>
+            ))
+          }
+        </div>
+        <p class="para">
+          我觉得复盘和提问不太一样。复盘是在总结，提问是在校准。
+        </p>
+        <p class="q-years">
+          这8个问题我问了3年，每次认真答完，基本都能帮我做出一两个重要决定。
+        </p>
+
+        <ol class="q-list">
+          {
+            questions.map(q => (
+              <li class:list={["q-item", { "q-item-final": q.final }]}>
+                <div class="q-item-head">
+                  <span class="q-no" aria-hidden="true">
+                    {q.no}
+                  </span>
+                  {q.final && (
+                    <span class="q-final-badge" aria-hidden="true">
+                      唯一
+                    </span>
+                  )}
+                </div>
+                <p class="q-text">{q.q}</p>
+                <p class="q-desc">{q.d}</p>
+                {q.vs && (
+                  <div class="q-vs" aria-hidden="true">
+                    <span class="q-vs-a">{q.vs[0]}</span>
+                    <span class="q-vs-or">还是</span>
+                    <span class="q-vs-b">{q.vs[1]}</span>
+                  </div>
+                )}
+                {q.final && (
+                  <span class="q-final-deco" aria-hidden="true">
+                    1
+                  </span>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="q-outro">
+          <p>找个安静的时间，把这8个问题认真写一遍。</p>
+          <p>别让下半年的时间和精力又被惯性带走。</p>
+          <p class="q-outro-final">让更多好事发生。</p>
+        </div>
+      </section>
+
+      {/* ================================================= */}
+      {/* 二 · 普朗克知识 */}
+      {/* ================================================= */}
+      <section class="part">
+        <header class="part-head" id="sec-2">
+          <span class="part-no" aria-hidden="true">
+            二
+          </span>
+          <h2 class="part-title">普朗克知识</h2>
+        </header>
+        <p class="attrib">本节为查理·芒格生前最爱讲的一则寓言。</p>
+
+        <h3 class="subhead">
+          <span class="subhead-no">1</span>普朗克与他的司机
+        </h3>
+
+        <ol class="plk-story">
+          <li class="plk-beat">
+            <p>
+              普朗克拿到<span class="hl">诺贝尔物理学奖</span
+              >后，在德国各地巡回演讲。他的专职<span class="hl">司机</span
+              >天天在台下听，把整篇演讲<span class="hl">背得滚瓜烂熟</span>。
+            </p>
+          </li>
+
+          <li class="plk-beat">
+            <p>有一天，司机对普朗克说：</p>
+            <blockquote class="plk-line plk-line-driver">
+              <span class="plk-who" aria-hidden="true">司机</span>
+              <p>
+                “教授，每次都是你讲，太枯燥了。要不这次我上台演说，你穿上司机的衣服坐在台下？”
+              </p>
+            </blockquote>
+            <p>普朗克<span class="hl">居然同意了</span>。</p>
+          </li>
+
+          <li class="plk-beat">
+            <p>
+              司机上台，<span class="hl">一字不差地</span
+              >背完了整场硬核物理报告，台下掌声雷动。这时，突然一位物理学家站起来，提了一个<span
+                class="hl">极其刁钻、极其高深</span
+              >的技术问题。
+            </p>
+          </li>
+
+          <li class="plk-beat">
+            <p>
+              换作普通人，当场就得<span class="hl">穿帮</span
+              >。但这位司机脑子极快，他面不改色地看着对方说：
+            </p>
+            <blockquote class="plk-line plk-line-punch">
+              <span class="plk-quote-mark" aria-hidden="true">”</span>
+              <p>
+                “我真没想到，像慕尼黑这样先进城市的学者，居然会问出这么基础的问题。这个问题，让我坐在台下的司机来回答就够了。”
+              </p>
+            </blockquote>
+          </li>
+        </ol>
+
+        <div class="plk-turn" role="separator" aria-label="开始吧">
+          <span class="plk-turn-line" aria-hidden="true"></span>
+          <span class="plk-turn-word">开始吧。</span>
+          <span class="plk-turn-line" aria-hidden="true"></span>
+        </div>
+
+        <h3 class="subhead">
+          <span class="subhead-no">2</span>两种知识
+        </h3>
+        <p class="para">
+          芒格讲这个故事，是为了<span class="hl">区分两种知识</span>：
+        </p>
+
+        <div class="plk-kinds">
+          {
+            kinds.map(k => (
+              <section class:list={["plk-kind", `plk-kind-${k.tone}`]}>
+                <span class="plk-kind-badge">
+                  {k.tone === "real" ? "真知" : "表演"}
+                </span>
+                <h4 class="plk-kind-name">{k.name}</h4>
+                <p class="plk-kind-desc">{k.desc}</p>
+              </section>
+            ))
+          }
+          <span class="plk-kinds-vs" aria-hidden="true">VS</span>
+        </div>
+
+        <h3 class="subhead">
+          <span class="subhead-no">3</span>AI 时代，最完美的司机
+        </h3>
+        <p class="plk-era-open">现在，AI 时代来了。</p>
+        <p class="para">
+          你会发现，大语言模型（LLM）的本质，就是这个世界上<span class="hl"
+            >最完美的“司机”</span
+          >。它看过了人类所有的“演讲稿”，能在几秒钟内，用最流畅的行业黑话，给你整出一篇极其专业的报告。<span
+            class="hl">只要你不追问</span
+          >，它看起来就像个无所不知的诺奖得主。
+        </p>
+
+        <aside class="plk-cruel">
+          <span class="plk-cruel-label">极其残酷的现实</span>
+          <p class="plk-cruel-text">
+            “司机知识”在一夜之间，变得<span class="hl">极其便宜，甚至免费</span
+            >。任何一个会用 prompt 的人，都能在表面上扮演某个领域的专家。
+          </p>
+          <div class="plk-price" aria-hidden="true">
+            <span class="plk-price-from">极其专业的报告</span>
+            <span class="plk-price-arrow">→</span>
+            <span class="plk-price-to">¥0 · 免费</span>
+          </div>
+        </aside>
+
+        <h3 class="subhead">
+          <span class="subhead-no">4</span>什么才是稀缺的
+        </h3>
+        <p class="plk-ask">
+          在信息密度瞬间被拉平的时代，<br />什么才是<span class="hl"
+            >真正稀缺</span
+          >的？
+        </p>
+        <p class="para">
+          是真正的<span class="hl">“普朗克知识”</span>。也就是：
+        </p>
+
+        <ol class="plk-criteria">
+          {
+            criteria.map(c => (
+              <li class:list={["plk-crit", { "plk-crit-key": c.important }]}>
+                <div class="plk-crit-head">
+                  <span class="plk-crit-no">{c.no}</span>
+                  <span class="plk-crit-tag">{c.tag}</span>
+                  {c.important && (
+                    <span class="plk-crit-star">最重要的一点</span>
+                  )}
+                </div>
+                <p class="plk-crit-q">{c.q}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="plk-coda">
+          <p class="plk-coda-line">
+            大模型能帮你<span class="strike">模仿一切</span
+            >，但它唯独无法产生真正的——
+          </p>
+          <p class="plk-coda-word">“理解”</p>
+          <hr class="plk-coda-rule" aria-hidden="true" />
+          <p class="plk-coda-tide">
+            <span class="hl">潮水退去</span
+            >的时候，谁是普朗克，谁是那个<span class="dim"
+              >穿着西装在台上流汗的司机</span
+            >，往往只需要<span class="hl">一两个追问</span>，就立刻<span
+              class="hl">现形</span
+            >了。
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================= */}
+      {/* 三 · ai 时代，认知才是最重要的 */}
+      {/* ================================================= */}
+      <section class="part">
+        <header class="part-head" id="sec-3">
+          <span class="part-no" aria-hidden="true">
+            三
+          </span>
+          <h2 class="part-title">ai 时代，认知才是最重要的</h2>
+        </header>
+        <p class="attrib">
+          本节收录自唐杰THU，原题《ai 时代——认知 &gt; 格局 &gt; 技术 &gt;
+          管理》，此为其中「认知」部分。
+        </p>
+
+        <h3 class="subhead">
+          <span class="subhead-no">1</span>三种「局」，很不一样
+        </h3>
+        <p class="para">
+          但ai的认知才是最重要的。ai的发展核心是技术，这和20年前创业的商业模式局不同，也和10年前创业的产品局不同。
+        </p>
+
+        <div class="ai2-locks">
+          {
+            locks.map(l => (
+              <section
+                class:list={["ai2-lock", { "ai2-lock-hl": l.highlight }]}
+              >
+                <span class="ai2-lock-era">{l.era}</span>
+                <h4 class="ai2-lock-name">{l.name}</h4>
+                <p class="ai2-lock-desc">{l.desc}</p>
+                <span class="ai2-lock-who">{l.who}</span>
+              </section>
+            ))
+          }
+        </div>
+
+        <p class="para">
+          而今的ai局又很不一样：openai和anthropic这两年的反复拉锯、轮流领先，一再说明ai时代的本质就是<span
+            class="hl">技术的快速进步</span
+          >——当你停下来打磨产品，可能第二天就发现底层技术已经落后、产品已经没人用；当你停下来思考商业模式，ai世界已经再次被颠覆。
+        </p>
+
+        <h3 class="subhead">
+          <span class="subhead-no">2</span>agi，是一场猎龙游戏
+        </h3>
+        <p class="para">
+          ai的终局就是agi，是一场<span class="hl">猎龙游戏</span
+          >。这条路上，所有打猎兔子的动作都不本质——除非你实在太饿，否则就该专注本质、专注主线。但光喊口号远远不够。agi是个愿景，可它在哪里、怎么定义、怎么做到，从来就没有标准答案：既不是传统学术范畴里“先慢慢定义清楚、再设计算法、做实验、验证、做原型、再产品化”那一套，肯定行不通；也不能简单靠以前那种“秒了他”——靠少数几个人熬夜就拼出来。
+        </p>
+
+        <p class="ai2-req-lead">实现agi需要：</p>
+        <ul class="ai2-req">
+          {agiNeeds.map(n => <li class="ai2-req-item">{n}</li>)}
+        </ul>
+        <p class="para">
+          这个时代的ai人不那么看重所谓的“经历”，更在意的是不内耗、不墨迹、够纯粹；但<span
+            class="hl">年轻并不等于纯粹</span
+          >，有些表面的年轻反而掩盖了“纯粹”这件事的本质重要性。
+        </p>
+
+        <h3 class="subhead">
+          <span class="subhead-no">3</span>cs 的资历，突然不管用了
+        </h3>
+        <p class="para">
+          ai的技术判断是另一个挑战。ai可能颠覆了很多人的认知：很多人喜欢ml、喜欢cs，是因为那里看起来优雅的理论和数学推导；而agi要更原生、更native，ai的数学推导其实已经<span
+            class="hl">超越大多数cs研究生、也超越大多数cs程序员</span
+          >了。原来cs们还以为自己高高在上，以为自己是ai的造物主、其他领域都要完蛋；其实真正被全面颠覆的，可能正是我们自己的知识体系。
+        </p>
+
+        <aside class="ai2-flatten">
+          <span class="ai2-flatten-label">cs 被拉平</span>
+          <p class="ai2-flatten-text">
+            这也是为什么cs的资历突然不管用了——所有cs被拉平、被ai扁平化管理，唯有成为ai时代<span
+              class="hl">具有超前认知的ic</span
+            >，才能在ai时代活下去：快速迭代知识、快速提高认知。
+          </p>
+          <div class="ai2-countdown" aria-hidden="true">
+            <span class="ai2-countdown-item">5年后的ai你能预见吗？<b>不能。</b></span>
+            <span class="ai2-countdown-item">2年呢？</span>
+            <span class="ai2-countdown-item">1年呢？</span>
+          </div>
+        </aside>
+      </section>
+
+      {/* ================================================= */}
+      {/* 四 · 九类自省 */}
+      {/* ================================================= */}
+      <section class="part">
+        <header class="part-head" id="sec-4">
+          <span class="part-no" aria-hidden="true">
+            四
+          </span>
+          <h2 class="part-title">九类自省</h2>
+        </header>
+        <p class="attrib">本节为收录整理的自省语录，按九类归纳，逐条保留原文。</p>
+
+        <div class="nr-stat" aria-hidden="true">
+          <span class="nr-stat-num">9</span><span class="nr-stat-unit">类</span>
+          <span class="nr-stat-dot">·</span>
+          <span class="nr-stat-num">{nrTotal}</span
+          ><span class="nr-stat-unit">条</span>
+        </div>
+
+        <nav class="nr-toc" aria-label="九类导航">
+          {
+            groups.map(g => (
+              <a href={`#${g.id}`} class="nr-toc-chip">
+                <span class="nr-toc-no">{g.no}</span>
+                <span class="nr-toc-name">{g.name}</span>
+              </a>
+            ))
+          }
+        </nav>
+
+        {
+          groups.map(g => (
+            <div class="nr-group">
+              <header class="nr-group-head" id={g.id}>
+                <span class="nr-group-no" aria-hidden="true">
+                  {g.no}
+                </span>
+                <div class="nr-group-title">
+                  <h3 class="nr-group-name">{g.name}</h3>
+                  <span class="nr-group-count">{g.items.length} 条</span>
+                </div>
+              </header>
+
+              <ol class="nr-items">
+                {g.items.map((t, i) => (
+                  <li class="nr-item">
+                    <span class="nr-item-no" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    <p class="nr-item-text">{t}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </section>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* ===== 通用工具类 ===== */
+  .text-accent {
+    color: var(--accent);
+  }
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .dim {
+    color: var(--muted-foreground);
+  }
+  .strike {
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .para {
+    margin-top: 1.15rem;
+    font-size: 1.02rem;
+    line-height: 1.85;
+    color: var(--foreground);
+  }
+  .attrib {
+    margin-top: 0.9rem;
+    padding-inline-start: 0.85rem;
+    border-inline-start: 3px solid
+      color-mix(in srgb, var(--accent) 55%, var(--border));
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* ===== Hero ===== */
+  .deco-hero {
+    position: absolute;
+    top: -1.2rem;
+    inset-inline-end: -0.3rem;
+    z-index: -1;
+    font-weight: 900;
+    font-size: clamp(5rem, 22vw, 11rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+  .lead {
+    margin-top: 0.9rem;
+    font-size: clamp(1.05rem, 3vw, 1.3rem);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+
+  /* 年度进度条：50% */
+  .year-bar {
+    margin-top: 1.2rem;
+    max-width: 26rem;
+  }
+  .year-bar-track {
+    position: relative;
+    height: 0.6rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted) 55%, transparent);
+    overflow: hidden;
+  }
+  .year-bar-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 50%;
+    border-radius: 999px;
+    background-color: var(--accent);
+  }
+  .year-bar-labels {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .year-bar-mid {
+    color: var(--accent);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ===== 全篇四段导航 ===== */
+  .toc-main {
+    margin-top: 1.6rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem;
+  }
+  @media (max-width: 560px) {
+    .toc-main {
+      grid-template-columns: 1fr;
+    }
+  }
+  .toc-main-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    color: var(--foreground);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.15s ease;
+  }
+  .toc-main-chip:hover {
+    border-color: var(--accent);
+    background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+    transform: translateY(-2px);
+  }
+  .toc-main-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.5rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  /* ===== PART 分区（一/二/三/四）===== */
+  .part {
+    margin-top: 3.2rem;
+  }
+  .part:first-of-type {
+    margin-top: 1.5rem;
+  }
+  .part-head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding-bottom: 1rem;
+    margin-bottom: 0.3rem;
+    border-bottom: 2px solid
+      color-mix(in srgb, var(--accent) 30%, var(--border));
+    scroll-margin-top: 5rem;
+  }
+  .part-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.8rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+  .part-title {
+    margin: 0;
+    font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+    font-weight: 800;
+    color: var(--foreground);
+  }
+
+  /* 段内小节标题（1/2/3/4，Arabic 数字避免与 PART 中文数字混淆）*/
+  .subhead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.2rem;
+    font-size: clamp(1.15rem, 3.4vw, 1.35rem);
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .subhead-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  /* ===== 一 · 8个问题 ===== */
+  .q-compare {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .q-compare-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 0.6rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 35%, var(--border));
+    background-color: color-mix(in srgb, var(--muted) 25%, transparent);
+  }
+  .q-compare-name {
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .q-compare-desc {
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+  }
+  .q-years {
+    margin-top: 0.9rem;
+    padding-inline-start: 0.85rem;
+    border-inline-start: 3px solid
+      color-mix(in srgb, var(--accent) 45%, var(--border));
+    font-size: 0.95rem;
+    color: var(--muted-foreground);
+  }
+
+  .q-list {
+    list-style: none;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .q-item {
+    position: relative;
+    padding: 1.25rem 1.35rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    overflow: hidden;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .q-item:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .q-item-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .q-no {
+    display: inline-grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 0.6rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .q-text {
+    position: relative;
+    margin: 0;
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .q-desc {
+    position: relative;
+    margin: 0.5rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--muted-foreground);
+  }
+  .q-vs {
+    position: relative;
+    margin-top: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .q-vs-a,
+  .q-vs-b {
+    padding: 0.35rem 0.8rem;
+    border-radius: 0.55rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .q-vs-a {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  .q-vs-b {
+    background-color: color-mix(in srgb, var(--muted-foreground) 18%, transparent);
+    color: var(--muted-foreground);
+  }
+  .q-vs-or {
+    font-size: 0.82rem;
+    color: var(--muted-foreground);
+  }
+
+  /* 第 8 题：唯一——高潮卡 */
+  .q-item-final {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent)
+    );
+  }
+  .q-final-badge {
+    margin-inline-start: auto;
+    padding: 0.24rem 0.7rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .q-final-deco {
+    position: absolute;
+    right: 0.4rem;
+    bottom: -0.6rem;
+    z-index: 0;
+    font-size: 6rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .q-outro {
+    margin-top: 1.8rem;
+    padding: 1.4rem 1.4rem;
+    border-radius: 1rem;
+    text-align: center;
+    background-color: color-mix(in srgb, var(--muted) 25%, transparent);
+  }
+  .q-outro p {
+    margin: 0.3rem 0 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .q-outro p:first-child {
+    margin-top: 0;
+  }
+  .q-outro-final {
+    margin-top: 0.7rem !important;
+    font-size: clamp(1.3rem, 4vw, 1.7rem) !important;
+    font-weight: 800 !important;
+    color: var(--accent) !important;
+  }
+
+  /* ===== 二 · 普朗克知识 ===== */
+  .plk-story {
+    list-style: none;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    position: relative;
+  }
+  .plk-story::before {
+    content: "";
+    position: absolute;
+    inset-block: 0.5rem;
+    inset-inline-start: 0.5rem;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--accent) 55%, var(--border)) 12%,
+      color-mix(in srgb, var(--accent) 55%, var(--border)) 88%,
+      transparent
+    );
+  }
+  .plk-beat {
+    position: relative;
+    padding-inline-start: 2rem;
+    padding-bottom: 1.4rem;
+  }
+  .plk-beat::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(0.5rem - 4px);
+    top: 0.6rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background-color: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  .plk-beat p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.85;
+    color: var(--foreground);
+  }
+  .plk-beat p + p {
+    margin-top: 0.7rem;
+  }
+
+  .plk-line {
+    position: relative;
+    margin: 0.8rem 0;
+    padding: 0.95rem 1.1rem;
+    border-radius: 0.75rem;
+  }
+  .plk-line p {
+    margin: 0;
+  }
+  .plk-line-driver {
+    border-inline-start: 3px solid
+      color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--muted) 32%, transparent);
+  }
+  .plk-who {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    padding: 0.12rem 0.55rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .plk-line-driver p {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .plk-line-punch {
+    margin-top: 0.9rem;
+    padding: 1.3rem 1.3rem 1.3rem 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-inline-start: 4px solid var(--accent);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent)
+    );
+  }
+  .plk-line-punch p {
+    font-size: clamp(1.05rem, 3vw, 1.22rem);
+    font-weight: 600;
+    line-height: 1.8;
+    color: var(--foreground);
+  }
+  .plk-quote-mark {
+    position: absolute;
+    top: -0.6rem;
+    inset-inline-start: 0.7rem;
+    font-size: 3rem;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--accent);
+    opacity: 0.28;
+    pointer-events: none;
+  }
+
+  .plk-turn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 0.5rem;
+  }
+  .plk-turn-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border));
+  }
+  .plk-turn-word {
+    flex: none;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: var(--muted-foreground);
+  }
+
+  .plk-kinds {
+    position: relative;
+    margin-top: 1.4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  @media (max-width: 640px) {
+    .plk-kinds {
+      grid-template-columns: 1fr;
+    }
+  }
+  .plk-kind {
+    padding: 1.4rem 1.3rem;
+    border-radius: 1rem;
+  }
+  .plk-kind-real {
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      color-mix(in srgb, var(--accent) 4%, transparent)
+    );
+  }
+  .plk-kind-fake {
+    border: 1px dashed
+      color-mix(in srgb, var(--muted-foreground) 40%, var(--border));
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+  }
+  .plk-kind-badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .plk-kind-real .plk-kind-badge {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  .plk-kind-fake .plk-kind-badge {
+    background-color: color-mix(in srgb, var(--muted-foreground) 20%, transparent);
+    color: var(--muted-foreground);
+  }
+  .plk-kind-name {
+    margin: 0.75rem 0 0.45rem;
+    font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+    font-weight: 800;
+  }
+  .plk-kind-real .plk-kind-name {
+    color: var(--foreground);
+  }
+  .plk-kind-fake .plk-kind-name {
+    color: var(--muted-foreground);
+  }
+  .plk-kind-desc {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .plk-kind-real .plk-kind-desc {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+  .plk-kind-fake .plk-kind-desc {
+    color: var(--muted-foreground);
+  }
+  .plk-kinds-vs {
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 999px;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+  @media (max-width: 640px) {
+    .plk-kinds-vs {
+      display: none;
+    }
+  }
+
+  .plk-era-open {
+    margin-top: 1.15rem;
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    font-weight: 800;
+    color: var(--foreground);
+  }
+  .plk-cruel {
+    margin-top: 1.5rem;
+    padding: 1.4rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  }
+  .plk-cruel-label {
+    display: inline-block;
+    margin-bottom: 0.6rem;
+    padding: 0.22rem 0.75rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  .plk-cruel-text {
+    margin: 0;
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .plk-price {
+    margin-top: 1.15rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .plk-price-from,
+  .plk-price-to {
+    padding: 0.45rem 0.95rem;
+    border-radius: 0.65rem;
+    font-weight: 700;
+    font-size: clamp(0.9rem, 2.6vw, 1.05rem);
+    white-space: nowrap;
+  }
+  .plk-price-from {
+    background-color: color-mix(in srgb, var(--muted) 55%, transparent);
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  .plk-price-to {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  .plk-price-arrow {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.25rem;
+  }
+
+  .plk-ask {
+    margin-top: 1.2rem;
+    padding: 1.5rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+    font-size: clamp(1.2rem, 4vw, 1.65rem);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .plk-criteria {
+    list-style: none;
+    margin: 1.3rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .plk-crit {
+    padding: 1.25rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 24%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .plk-crit:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .plk-crit-key {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent)
+    );
+  }
+  .plk-crit-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+  .plk-crit-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.6rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .plk-crit-tag {
+    padding: 0.28rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+  .plk-crit-star {
+    margin-inline-start: auto;
+    padding: 0.24rem 0.7rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+  .plk-crit-q {
+    margin: 0;
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+
+  .plk-coda {
+    margin-top: 2.4rem;
+    padding: 2rem 1.6rem;
+    border-radius: 1.1rem;
+    text-align: center;
+    border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--border));
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      color-mix(in srgb, var(--muted) 20%, transparent)
+    );
+  }
+  .plk-coda-line {
+    margin: 0;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .plk-coda-word {
+    margin: 0.4rem 0 0;
+    font-size: clamp(2.4rem, 11vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--accent);
+  }
+  .plk-coda-rule {
+    width: 3rem;
+    margin: 1.4rem auto;
+    border: none;
+    border-top: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+  .plk-coda-tide {
+    margin: 0;
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    line-height: 1.85;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  /* ===== 三 · ai 认知 ===== */
+  .ai2-locks {
+    margin-top: 1.3rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+  @media (max-width: 700px) {
+    .ai2-locks {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ai2-lock {
+    padding: 1.2rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .ai2-lock:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .ai2-lock-hl {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent)
+    );
+  }
+  .ai2-lock-era {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+  .ai2-lock-name {
+    margin: 0.7rem 0 0.4rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--foreground);
+  }
+  .ai2-lock-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+  .ai2-lock-who {
+    display: inline-block;
+    margin-top: 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .ai2-req-lead {
+    margin-top: 1.2rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .ai2-req {
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .ai2-req-item {
+    position: relative;
+    padding: 0.85rem 1.1rem 0.85rem 1.9rem;
+    border-radius: 0.7rem;
+    background-color: color-mix(in srgb, var(--muted) 25%, transparent);
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--foreground);
+  }
+  .ai2-req-item::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0.9rem;
+    top: 1.05rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+  }
+
+  .ai2-flatten {
+    margin-top: 1.4rem;
+    padding: 1.4rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+  }
+  .ai2-flatten-label {
+    display: inline-block;
+    margin-bottom: 0.6rem;
+    padding: 0.22rem 0.75rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  .ai2-flatten-text {
+    margin: 0;
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .ai2-countdown {
+    margin-top: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .ai2-countdown-item {
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.6rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, var(--border));
+    font-size: 0.88rem;
+    color: var(--muted-foreground);
+  }
+  .ai2-countdown-item b {
+    color: var(--accent);
+  }
+
+  /* ===== 四 · 九类自省 ===== */
+  .nr-stat {
+    margin-top: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+  .nr-stat-num {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .nr-stat-unit {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .nr-stat-dot {
+    margin-inline: 0.35rem;
+    color: var(--muted-foreground);
+  }
+
+  .nr-toc {
+    margin-top: 1.2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  @media (max-width: 620px) {
+    .nr-toc {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .nr-toc-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    color: var(--foreground);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition:
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+  .nr-toc-chip:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .nr-toc-no {
+    flex: none;
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+
+  .nr-group {
+    margin-top: 2.4rem;
+  }
+  .nr-group-head {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px dashed var(--border);
+    scroll-margin-top: 5rem;
+  }
+  .nr-group-no {
+    flex: none;
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .nr-group-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .nr-group-name {
+    margin: 0;
+    font-size: clamp(1.15rem, 3.5vw, 1.35rem);
+    font-weight: 800;
+    color: var(--foreground);
+  }
+  .nr-group-count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  .nr-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+  .nr-item {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.65rem 0.65rem 0.65rem 0.55rem;
+    border-radius: 0.55rem;
+    border-inline-start: 2px solid transparent;
+    transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease;
+  }
+  .nr-item:hover {
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+    border-inline-start-color: var(--accent);
+  }
+  .nr-item-no {
+    flex: none;
+    min-width: 1.8rem;
+    padding-top: 0.15rem;
+    text-align: end;
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+  .nr-item-text {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.78;
+    color: var(--foreground);
+  }
+
+  /* 入场动画 —— 仅 hero/导航使用；正文条目静态呈现，避免长页下方内容长时间不可见 */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
