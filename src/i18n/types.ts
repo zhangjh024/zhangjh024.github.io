@@ -20,11 +20,6 @@ export interface UIStrings {
     previousPost: string;
     nextPost: string;
   };
-  pagination: {
-    prev: string;
-    next: string;
-    page: string;
-  };
   home: {
     socialLinks: string;
     featured: string;
@@ -58,8 +53,6 @@ export interface UIStrings {
     toggleTheme: string;
     searchPlaceholder: string;
     noResults: string;
-    goToPreviousPage: string;
-    goToNextPage: string;
   };
   notFound: {
     title: string;

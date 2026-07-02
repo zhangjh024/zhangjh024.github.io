@@ -22,11 +22,6 @@ export default {
     previousPost: "Previous Post",
     nextPost: "Next Post",
   },
-  pagination: {
-    prev: "Prev",
-    next: "Next",
-    page: "Page",
-  },
   home: {
     socialLinks: "Social Links",
     featured: "Featured",
@@ -60,8 +55,6 @@ export default {
     toggleTheme: "Toggle theme",
     searchPlaceholder: "Search posts...",
     noResults: "No results found",
-    goToPreviousPage: "Go to previous page",
-    goToNextPage: "Go to next page",
   },
   notFound: {
     title: "404 Not Found",

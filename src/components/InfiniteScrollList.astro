@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Card from "./Card.astro";
+import config from "@/config";
+
+type Props = {
+  posts: CollectionEntry<"posts">[];
+  variant?: "h2" | "h3";
+  batchSize?: number;
+};
+
+const { posts, variant = "h2", batchSize = config.posts.perPage } = Astro.props;
+---
+
+<ul data-infinite-list data-batch-size={batchSize}>
+  {
+    posts.map((post, index) => (
+      <Card {...post} variant={variant} hidden={index >= batchSize} />
+    ))
+  }
+</ul>
+
+{
+  posts.length > batchSize && (
+    <div data-infinite-sentinel class="h-1 w-full" aria-hidden="true" />
+  )
+}
+
+<noscript>
+  <style>
+    ul[data-infinite-list] > li[hidden] {
+      display: block !important;
+    }
+  </style>
+</noscript>
+
+<script>
+  let observer: IntersectionObserver | null = null;
+
+  document.addEventListener("astro:page-load", () => {
+    observer?.disconnect();
+    observer = null;
+
+    const list = document.querySelector<HTMLElement>("[data-infinite-list]");
+    const sentinel = document.querySelector<HTMLElement>(
+      "[data-infinite-sentinel]"
+    );
+    if (!list || !sentinel) return;
+
+    const batchSize = Number(list.dataset.batchSize) || 4;
+
+    const revealNext = () => {
+      const pending = Array.from(
+        list.querySelectorAll<HTMLElement>("li[hidden]")
+      ).slice(0, batchSize);
+
+      pending.forEach(item => {
+        item.removeAttribute("hidden");
+        item.classList.add("infinite-reveal");
+      });
+
+      if (!list.querySelector("li[hidden]")) {
+        observer?.disconnect();
+        sentinel.remove();
+      }
+    };
+
+    observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(entry => entry.isIntersecting)) revealNext();
+      },
+      { rootMargin: "600px 0px" }
+    );
+    observer.observe(sentinel);
+  });
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.infinite-reveal) {
+      animation: infinite-fade-in 0.5s ease both;
+    }
+  }
+  @keyframes infinite-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
