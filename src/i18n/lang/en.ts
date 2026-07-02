@@ -26,7 +26,6 @@ export default {
     socialLinks: "Social Links",
     featured: "Featured",
     recentPosts: "Recent Posts",
-    allPosts: "All Posts",
   },
   footer: {
     copyright: "Copyright",
