@@ -1,0 +1,1078 @@
+---
+/**
+ * 《AI 砍掉的第一批大厂人：高薪，高绩效，高P》的定制设计页（slug 为 ai-layoffs）。
+ *
+ * 结构：博主编者按（原创，逐字）+ 36 氪原文全文（转载，逐字）。
+ * 手写前端结构做「设计呈现」：编者按与转载正文在视觉上区分；关键数字内联高亮；
+ * 少数几处做对比 / 数据 / 三级结构可视化——可视化里出现的每个字都来自原文，不新增。
+ * SEO / 列表 / RSS / OG 仍走 md frontmatter。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+const charCount = (post.body ?? "").replace(/\s+/g, "").length;
+const readingMinutes = Math.max(1, Math.round(charCount / 400));
+
+// 中层向高层「层层加码」的三级结构，标题原文即为「焦虑的高层、加码的中层、发疯的基层」
+const tiers = [
+  { role: "高层", state: "焦虑" },
+  { role: "中层", state: "加码" },
+  { role: "基层", state: "发疯" },
+];
+---
+
+<main id="main-content" data-pagefind-body class="report mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-8 sm:pt-10 sm:pb-12"
+    >
+      <span aria-hidden="true" class="deco-word select-none">630</span>
+
+      <p
+        class="reveal text-accent text-sm font-medium tracking-[0.2em] uppercase"
+      >
+        转载 · 36氪
+      </p>
+
+      <h1
+        class="reveal post-title mt-3"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        AI 砍掉的第一批大厂人
+      </h1>
+      <p class="reveal post-subtitle" style={{ "--d": "0.1s" }}>
+        高薪，高绩效，<span class="text-accent">高P</span>
+      </p>
+
+      <div
+        class="reveal text-muted-foreground mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+        style={{ "--d": "0.15s" }}
+      >
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span aria-hidden="true">·</span>
+        <span>约 {readingMinutes} 分钟</span>
+      </div>
+    </header>
+
+    {/* ===== 编者按（博主原话，与下方转载区分）===== */}
+    <section class="app-layout">
+      <aside class="editor-note reveal">
+        <span class="editor-tag">编者按</span>
+        <p>
+          今天看到了 36
+          氪的一篇文章，推荐大家看看，虽然有制造焦虑以及夸大的成分，但不得不承认，这就是当下以及未来很长一段时间的现状，2026
+          只是刚刚迈出的第一步。
+        </p>
+        <p>
+          即使你拥抱 AI，也可能会被 AI 淘汰，这个进程正在被不断加速。<span
+            class="hl">在 AI 面前，所有白领岗位没有任何护城河。</span
+          >
+        </p>
+        <div class="questions">
+          <span class="questions-label">每个人永远的命题</span>
+          <ul class="questions-list">
+            <li>你想怎么样而活</li>
+            <li>你是什么的人</li>
+            <li>人生的意义是什么</li>
+          </ul>
+        </div>
+        <p class="editor-sep">原文如下：</p>
+      </aside>
+    </section>
+
+    {/* ===== 引子 · 被叫进会议室 ===== */}
+    <section class="app-layout body">
+      <div class="scene reveal">
+        <span class="scene-label" aria-hidden="true">名单</span>
+        <p class="scene-line">“现在公司有（减员）名单，你在这里面。”</p>
+        <p class="scene-sub">
+          5月中的一天，林越被组长叫进会议室，对方开门见山。
+        </p>
+      </div>
+
+      <p class="para">
+        林越的第一反应是平静，他早有预料。早在今年三四月，一些互联网公司内部便传出要裁员的风声。开年以来，中国互联网大公司围绕AI提效激进开展的token竞赛、培训会、隐形考核等，无处不在。当所有人都被卷入一场“all
+        in AI”的运动时，“裁员一定会发生”就是大家心照不宣的共识。
+      </p>
+
+      <p class="para">
+        但站在HR门口时，他还是迎来了情绪崩溃的瞬间：手开始发抖，犹豫了很长时间，想着怎么开头，怎么调整自己的举止表情。“我再也不想经历这样的事。”
+      </p>
+
+      <p class="para">
+        林越月薪<span class="num">2万5</span
+        >，一年前本科毕业，入职携程当后端工程师——当时看，他是极其幸运的一个。互联网招聘红利不再，携程几千份简历只录取<span
+          class="num">不到500人</span
+        >，但他进入的是公司最赚钱的酒店部门，负责为商业化产品写代码。
+      </p>
+
+      <p class="para">
+        但现在看，月薪2万5、只有一年经验的初级程序员，不裁他裁谁呢？一是赔偿成本低，二是比起对业务通盘更熟的老员工，新人使用AI的效率往往更低。“有业务经验打底，想用AI做什么，有什么影响，老员工更清楚。”林越说。
+      </p>
+
+      <p class="para">
+        斯坦福大学在一篇名为《Canaries in the Coal
+        Mine?》（《煤矿里的金丝雀？》）的论文中，用“金丝雀”比喻刚踏入职场的年轻人。其研究显示，2022年ChatGPT普及以来，最年轻劳动者的就业大幅下降，到2025年9月，22-25岁软件开发者的就业相比其2022年底的峰值下降了<span
+          class="num">近20%</span
+        >。
+      </p>
+
+      <p class="para">
+        最近一年，AI让一切更卷了。携程曾是著名的“互联网养老厂”——但林越入职没多久，赶上AI
+        Coding能力大爆发：
+      </p>
+
+      {/* 携程节奏对比 —— 两侧文字均取自原文 */}
+      <div class="contrast reveal" aria-hidden="false">
+        <div class="contrast-col was">
+          <span class="contrast-head">曾是“互联网养老厂”</span>
+          <ul>
+            <li>早上10点半上班</li>
+            <li>午休两小时</li>
+            <li>下午7点准时下班</li>
+            <li>主APP两周一个迭代</li>
+          </ul>
+        </div>
+        <span class="contrast-arrow" aria-hidden="true">→</span>
+        <div class="contrast-col now">
+          <span class="contrast-head">卷成</span>
+          <ul>
+            <li>一周一个APP迭代</li>
+            <li>每天干到10点半</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="para">
+        但这种节奏加快，并不是因为业务有爆发式增长，“而是因为不找事做，就会变成边缘部门，边缘部门就会被砍。”林越告诉36氪。但最终，他还是没有避免“被砍”的命运。
+      </p>
+
+      <p class="interlude reveal">不过，“斩杀”也可能是无差别的。</p>
+
+      <p class="para">苍述完全没想到，自己会是第一批出现在裁员名单上的人。</p>
+
+      <p class="para">
+        5月的一个周五，上班前半小时，“部门突然拉了一个all
+        hands（全员会），HR直接宣布了结果，告诉大家有这个事儿。”
+      </p>
+
+      <p class="para">
+        来美团之前，苍述是字节的SSP校招生（Super Special
+        Offer），高薪入职，到最后也是组内同级员工中工资最高的一个。跳槽到美团后，组内的核心项目几乎都被放在他手中，今年本该是苍述的晋升节点。
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        “绩优”、“高P”的保护屏障都失效了。
+      </blockquote>
+
+      <p class="para">
+        苍述的隔壁组，裁掉的两名员工都在去年取得了“超预期”的绩效评级。裁到最后，苍述所在的小组几乎被全员“端掉”，“这个组名义上还存在，实际已经没人了。”
+      </p>
+
+      <p class="para">
+        林越得知自己被裁时，才发现平时常常对接的两位前端工程师，“头像不知道什么时候已经灰了”；美团的一个用户增长大群，原本的数百位成员如今只剩一半左右；阿里巴巴的高德、飞猪等业务，也处在剧烈震荡中。
+      </p>
+
+      <p class="para">
+        “630”成了社交媒体上的热词。它是国内AI真正大规模走进互联网职场的第一个季度末。六月底到七旬中旬，既是许多公司人员汰换的惯例时点，也是这场裁员潮中普遍设定的“last
+        day”。
+      </p>
+
+      <p class="para">风向标硅谷已经率先在裁员，特征是成批量、规模大。</p>
+
+      {/* 硅谷裁员数据 —— 数字与说明均取自原文 */}
+      <div class="stat-grid reveal">
+        <div class="stat">
+          <span class="stat-src">Meta</span>
+          <span class="stat-num">8000<small>人</small></span>
+          <span class="stat-label">宣布裁员</span>
+        </div>
+        <div class="stat">
+          <span class="stat-src">Meta</span>
+          <span class="stat-num">7000<small>人</small></span>
+          <span class="stat-label">转岗AI部门</span>
+        </div>
+        <div class="stat">
+          <span class="stat-src">亚马逊</span>
+          <span class="stat-num">1.6<small>万</small></span>
+          <span class="stat-label">白领岗位裁员</span>
+        </div>
+      </div>
+
+      <p class="para">
+        5月，Meta宣布裁员8000人，7000人转岗AI部门，成为硅谷科技公司里最动荡的一家，高管承认“公司士气近20年来最低”；更早时候，亚马逊宣布裁员1.6万白领岗位，把省下的资金投向AI。
+      </p>
+
+      <p class="para">
+        2021年上一轮裁员潮发生前，国内互联网大公司疯狂扩张边界，高密度地成立一个又一个新业务，一批人被快速招募起来，又快速抹去。
+      </p>
+
+      <p class="para">
+        但今年裁员潮的内在主线并非这样单一。AI提效、大而重的老业务增长乏力或深陷竞争泥潭、投资AI新业务带来的现金压力，在这个时段交织并行。许多被通知离开的人，也很难说得清这些因素孰轻孰重。
+      </p>
+
+      <p class="para">
+        《哈萨比斯：谷歌AI之脑》的作者称，如同奥本海默创造了原子弹，却无法控制它的使用，追求真理的科学家们也是“万物的破坏者”：我们的工作、思维方式，甚至生存，都可能被“破坏”。十年前的韩国首尔，AlphaGo带给人类棋手李世石最初的破坏。十年后，从硅谷到北京，这种破坏再次蔓延。
+      </p>
+
+      <p class="para">
+        对大公司而言，AI是船票，它指向大模型或AI应用这类新业务。但新业务能不能干成、何时干成，没人说得准。面对不再增长的老业务，大公司不得不在每一个确定的和不确定的方向上，更加坚决地提效、进而裁员。
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        “没关系，我们大家都会有这一天，只是你的这天来得更早一些。”
+      </blockquote>
+
+      <p class="para">
+        林越向朋友倾诉裁员遭遇时，被安慰道了这句话。但比自我开解更重要的可能是，被AI替代、被大厂裁员后，人们该如何选择、如何行动。
+      </p>
+    </section>
+
+    {/* ===== 章节 01 · 焦虑的高层、加码的中层、发疯的基层 ===== */}
+    <section class="app-layout body chapter-block">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">01</span>
+        焦虑的高层、加码的中层、发疯的基层
+      </h2>
+
+      {/* 三级递进 —— 角色与状态词均取自本节标题 */}
+      <div class="tiers reveal">
+        {
+          tiers.map((t, i) => (
+            <div class:list={["tier", `tier-${i}`]}>
+              <span class="tier-role">{t.role}</span>
+              <span class="tier-state">{t.state}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="para">
+        “以前在字节两个月才能做出来的产品demo，我们现在两个星期就能做出来。”一名前字节产品经理、现AI创业公司高管对36氪说，有了Claud
+        Code、Codex这样的工具后，自己团队现在可以<span class="num">3小时</span
+        >做出demo，<span class="num">一周内</span>完成想法验证。
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        “一个产品（经理）就像一个CEO。”
+      </blockquote>
+
+      <p class="para">
+        他说，组织结构可以随之大幅压缩，信息传递的损耗比大厂少太多，完美“熵减”。
+      </p>
+
+      <p class="para">
+        当创业公司借助AI快速行动之时，互联网大厂回望自身，是否会觉得自己像迟缓的巨兽？
+      </p>
+
+      <p class="para">来自大厂最高层的表态，往往是一个信号。</p>
+
+      <p class="para">
+        今年3月，美团CEO王兴在高管沟通会上谈到自己对AI的看法，“AI
+        Agent对我的冲击比ChatGPT更大，AI注定会创造巨大生产力，也一定会对组织、对工作模式带来很大的变化。”
+      </p>
+
+      <p class="para">
+        那场沟通会结束不久，美团在全公司范围拉了一场线上大会，核心是宣贯“龙虾”的安装与使用，提倡每位同事安装“龙虾”，以及将日常工作尽可能写成可复用的Skill。
+      </p>
+
+      <p class="para">
+        会后，在美团核心本地商业从事商家运营的陈宇佳收到通知，需要在每周的周报里加上一个板块，写明自己利用AI做了哪些提效、有什么Skill可以推广到全组和全部门使用。“然后就感受到大家好像拼命在把AI融入自己的工作中。”
+      </p>
+
+      <p class="para">
+        4月的一天，一位阿里算法工程师毫无征兆地收到部门上一个月的token消耗排行榜，他以<span
+          class="num">170亿</span
+        >token消耗量赫然位列第一名，被公开表扬。部门老板表示，以后年度KPI、晋升考核都将参考这一排行。但一个月后，新的token消耗排行榜没能如期而至，“可能老板也发现了这种排名方式不靠谱。”
+      </p>
+
+      <p class="para">
+        新的规则接踵而至。部门领导很快又提出，员工需要在工作日的早上11点到下午6点上传每小时的“时报”，由Agent上的插件自动记录代码及对话内容，生成工作总结——这意味着员工无法修改自己的时报内容。就在第二天，hr以近乎争吵的姿态，劝阻了该领导的荒谬制度。
+      </p>
+
+      <p class="para">
+        类似这样的事情，已经不再让人意外。来自高层的AI焦虑不断下放，中层们层层加码，努力暗示下属，这是一场隐形的汇报竞赛、军备竞赛、淘汰竞赛。
+      </p>
+
+      <p class="para">
+        尽管没有强制每个人一定要写Skill，陈宇佳的部门领导还是会密切关注每个下属的token用量，不时询问具体情况，“他也不清楚AI具体能做什么，但他说他不允许我们团队的每个人在这次AI浪潮中落后”。有时在工作结束后的私下聚餐中，大家也会接收到老板暗暗传达的一种危机感，“一定要把AI用起来，否则到时候我想拉你们一把都拉不了。”
+      </p>
+
+      <p class="para">
+        阿里某AI
+        Coding产品的一位工程师告诉36氪，集团一些业务的老板会向他们的产品团队提出请求，希望通过增加数据埋点的方式，“让他清楚地看到团队成员每天使用AI的具体轨迹。”
+      </p>
+
+      <p class="para">
+        美团的一些中层在接到裁员指标后，甚至会向上递出一份更激进、比例更高的裁员名单——更少的人、更高的AI参与度，某种程度上直接等同于新时代的“管理成绩”。
+      </p>
+
+      <p class="para">
+        AI提效成了一个任何业务、任何职能都能去“搞一搞”的事情。但关于AI到底能做什么，要怎么落地实现，一条长长的裂缝始终横亘在基层与管理层之间——各级老板对AI赋予无限美好的期待，基层拼命去实现、却总也触及不到那个设想，最终只能疲惫地“表演”。
+      </p>
+
+      <p class="para">
+        江灵在阿里淘天集团做客户运营，她的工作是尽可能拉齐消费者需求和商家供给。在她看来，老板们总是“把AI想得很智能、很简单”。
+      </p>
+
+      <p class="para">
+        就拿电商中常见的异常场景“爆单”来说，高层期待通过全量巡检，提前找出所有“爆款”。然而，平台一天的商品量是千万级别，远远超出了现有人力和Token可以负荷的数量，于是只能小范围测试，挑选几十万个商品，由于样本范围太小，命中率往往很低。
+      </p>
+
+      <p class="para">
+        “作为一个员工，你没法反驳老板的那种期待，你懂吗？”江灵激愤又无奈。
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        “累不可怕，没有方向和正反馈，才是最可怕的。你就是不停地拉磨，也不知道最后要去哪里。”
+      </blockquote>
+
+      <p class="para">很多时刻，江灵觉得自己就像一头驴，有鞭子在后面抽。</p>
+
+      <p class="para">
+        “你不能把AI当成一个许愿池用。”一家AI公司的CTO对36氪总结，AI提效有很多前提，基础是数据，但很多公司的数字化本身就没做好；此外，许多流程上的卡点在“人”，是单靠AI无法解决的。
+      </p>
+    </section>
+
+    {/* ===== 章节 02 · 一代人有一代人的土木 ===== */}
+    <section class="app-layout body chapter-block">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">02</span>
+        一代人有一代人的土木
+      </h2>
+
+      <p class="para">
+        产品、运营等大厂岗位感受到的还是不确定的焦虑，而程序员只能率先接受被宣判的命运。
+      </p>
+
+      <p class="para">
+        百度前端工程师李川第一次被AI能力震惊，是在今年初用到Claude
+        Code。“同样的复杂需求，用国内一些大模型可能需要五到六轮对话，用Claude两三轮就搞定了，且完成得更好。”
+      </p>
+
+      <p class="para">
+        他第二次被AI惊艳，是今年4月。中国大模型公司智谱发布GLM-5.1模型，“一是便宜，二是它的能力完全可以作为Claude
+        Code的平替。”
+      </p>
+
+      <p class="para">
+        李川当时就意识到自己的饭碗不保。到了5月，他果然出现在“名单”上。
+      </p>
+
+      <p class="para">
+        如同一枚硬币的两面，一面是2026年5月，Claude Code母公司Anthropic已经实现<span
+          class="num">470亿美元</span
+        >左右的年化收入（ARR），半年时间涨了四五倍；智谱也在近期冲上<span
+          class="num">万亿市值</span
+        >。
+      </p>
+
+      <p class="para">
+        另一面是AI
+        Coding能力的极速成熟，让程序员成为了这轮裁员潮中的重灾区。“各家首当其冲的几乎都是产研团队，尤其是前端开发、测试开发这样的岗位，通常很容易被老板认为含金量不再。”一位互联网公司HR告诉36氪。
+      </p>
+
+      <p class="para">
+        2025年，李川以校招生身份进入百度，成为一名前端工程师。一年前参与校招面试时，AI还仅仅扮演着搜索引擎的角色，只能通过简单问答来辅助编程，面试官全程都没有谈及AI。
+      </p>
+
+      <p class="para">
+        “前端”是李川理想的职业，因为这是一个所见即所得的工作，代码质量直接体现为产品界面上的每个细节。每到过年，告诉家人“打开百度app，上面那个东西是我做的”，会让他尝到成就感和“工作的意义”。
+      </p>
+
+      <p class="para">
+        多年以来，大公司的程序员被泾渭分明地划分为算法、前端、后端、测试等职能，前端对审美、交互等软性能力要求更高，后端则更需要严谨的技术能力。这一行的薪资水平和“鄙视链”，也直接跟“技术含量”挂钩——前端比测试高，但不如算法工程师和后端工程师。
+      </p>
+
+      <p class="para">
+        仅仅一年，李川熟悉的一切已经地覆天翻。写代码和改代码的工作被AI大面积接管，程序员的几种职能也模糊了界限。甚至产品经理也能一脚跨进编程的门。
+      </p>
+
+      <p class="para">
+        阿里的一个开发部门，今年五月接到部门老板的通知，要求大家暂停所有的非紧急需求，每个团队开发一个Agent，以后针对任何业务需求，都只能由产品同事直接与Agent对接。程序员只能修改Agent，不能碰代码。老板还暗示，到今年十月份，做得好的团队将接替不好的团队来维护Agent。
+      </p>
+
+      {/* 腾讯 bug 流水线 —— 数字取自原文 */}
+      <div class="fact-card reveal">
+        <span class="fact-num">50<small>%</small></span>
+        <p class="fact-body">
+          腾讯CSIG的技术团队研发了一条为公司App修复bug的流水线——由AI修复bug，程序员只需要在bug解决完成后进行检查，点击“确认”按钮，代码就会合入，它的修复准确率目前可以达到<b
+            >50%</b
+          >。
+        </p>
+      </div>
+
+      <p class="para">
+        阿里巴巴5月在内部成立了一批全栈小组，让前端、后端和测试工程师都转成“全栈工程师”，成为“超级个体”。6月开始，美团内部也在全面推行前后端开发的合并。
+      </p>
+
+      <p class="interlude reveal">
+        转“全栈”理论上是可行的，但实践起来，却是扒掉一层皮的痛苦过程。
+      </p>
+
+      <p class="para">
+        突然被转为全栈工程师的韩之，根本没有太多时间学习，很快就要开始自己的第一个“全栈”项目，前后端开发、测试由她一人包揽。“现在我所有需求都是‘倒排’的，规定几号几号前上线，”她最近工作强度打满，晚上9点手头的活儿还没干完，“我实在太累了”。
+      </p>
+
+      <p class="para">
+        但大势不可违。从去年底到今年初，中国几家头部公司都在尽可能地撒钱，推动程序员消耗token，逐渐淘汰“古法编程”。
+      </p>
+
+      <p class="para">
+        最高峰时，腾讯CSIG团队成员享受的是<span class="num">2000美金/月</span
+        >的token额度，只要诉求合理、有相应的代码产出，用完还可以申请翻倍提额。token使用量也同步被纳入考核，“当你的用量很低时，你的leader会问你为什么。”因此，一些人会把用不完的token额度借给别人。
+      </p>
+
+      <p class="para">
+        多年以来，大厂程序员意味着高薪与光环。他们是互联网公司的基石，“程序员精神”的内涵是开源与分享，是代码的简洁与优雅，是没有杂音的唯成果论，是看到字符在屏幕上跳动时的兴奋感。
+      </p>
+
+      <p class="para">
+        但时代变了。几乎每一位受访的程序员都对36氪谈到同样一种感受，“离开AI将无法工作，假如AI‘挂掉’了，我宁愿花大量时间去找新的Codingplan，也不愿意自己去看代码改一改”——再去谈论所谓的“程序员精神”，也显得不合时宜。
+      </p>
+
+      <p class="para">
+        李川说，昔日一个优秀程序员的修养是学习和迭代，因为过去几十年编程语言一直在变，不学就跟不上技术前沿。他和朋友们周末去咖啡馆研究新技术也是常有的事，“这个群体本身就挺卷的”。但AI恐怖的迭代速度让人彻底失语。
+      </p>
+
+      <p class="para">
+        “如果AI
+        Coding锁死在25年的水平就好了，能抹平我这种一两年资历和七八年资历人的技术水平，同时又不能真正代替人，还有很多‘对话框’之外的事可做。”林越感叹。但技术不会为谁停车，现在他毫不怀疑——
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        程序员的消亡已经是进行时了，<br class="hidden sm:block" />
+        “就像珍妮机发明后的纺织工人一样”。
+      </blockquote>
+    </section>
+
+    {/* ===== 章节 03 · 旧增长没了，新赛马启动 ===== */}
+    <section class="app-layout body chapter-block">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">03</span>
+        旧增长没了，新赛马启动
+      </h2>
+
+      <p class="para">
+        当技术给一家公司的效率注入倍数级杠杆，随后发生的事情无外乎两种——同样的人做更多的事，又或者，一家公司不再需要这么多人。
+      </p>
+
+      <p class="para">
+        “我们不裁员。”一家软件公司CEO对36氪说，好不容易“调教”出了这些对行业、开发方法富有认知的程序员，每一个都是公司的财富，当AI
+        Coding把编程效率提升了<span class="num">5倍</span
+        >，他要做的不是裁掉4/5的人，而是把业务扩大<span class="num">5倍</span>。
+      </p>
+
+      <p class="interlude reveal">
+        这愿望固然美好，但问题在于，市场还有这么多增量吗？
+      </p>
+
+      <p class="para">
+        被裁之前，林越短暂体会到AI写代码的“解放感”，但很快，他反倒变得更忙了。以往，业务对App细节有迭代需求时，总要等排期慢慢来。现在业务的需求越堆越快，无论可不可行、重不重要，都让研发团队“先做出来试试”。
+      </p>
+
+      <p class="para">
+        但这些需求在林越看来多少有点“鸡肋”——最小的“banner位”修改一下文案细节，又或是将浮窗广告由“免费取消”改为“积分抵扣”。“产品经理变变这个，变变那个，我们会做AB测试，改后效果能变好的情况真的不多。”
+      </p>
+
+      <blockquote class="pull-quote reveal">
+        “越没有增长的部门越是all in AI，总要找点新故事讲嘛。”
+      </blockquote>
+
+      <p class="para">
+        苍述说，他既待过外卖业务，也待过无人机业务，以他的亲身感受，前者卷AI的氛围比后者浓得多。
+      </p>
+
+      <p class="para">
+        一位刚在Meta经历了大裁员的Infra工程师告诉36氪，学会压榨AI后，他和同事们以前没时间做的事情，“现在都想做一做”。但如今一大批人离开，留下的同事又开始把那些必要性不高的工作砍掉。
+      </p>
+
+      <p class="para">
+        摆在所有人面前的现实是，移动互联网时代跑出的明星产品们，如今都很难再通过“做更多工作”而实质性地推高增长。其中一些公司不仅没有增长，还因激烈的外部竞争而失血严重。
+      </p>
+
+      {/* 外卖大战 —— 数字取自原文 */}
+      <div class="fact-card reveal">
+        <span class="fact-num">2000<small>亿</small></span>
+        <p class="fact-body">
+          2025年外卖大战几家公司烧了<b>2000亿</b
+          >，将美团的利润与现金流拖入泥潭，这让人均贡献利润原本就低的美团率先进入裁员周期。
+        </p>
+      </div>
+
+      <p class="para">
+        但换个角度看，美团的业务高度依赖线下履约，AI提效空间跟线上化程度更高的公司比是偏小的，“如果连美团都能通过AI提效减员，那其他公司一定会跟进。它是一个风向标。”一位美团员工说。
+      </p>
+
+      <p class="para">
+        传统现金牛业务广告持续萎缩的百度，在阿里内部长期边缘、贡献微薄的飞猪和高德，也都是类似情况。
+      </p>
+
+      <p class="interlude reveal">
+        旧业务的裁员难以避免，那么活水的机会存在吗？
+      </p>
+
+      <p class="para">
+        一些管理层在谈起裁员话题时，会告诉员工“公司现在也搞AI，可以试着去找找自己能做的项目。”一位美团员工告诉36氪。近日，美团核心本地商业新成立了AI
+        Transformation部门，主要职能是探索用AI梳理业务的内部流程；此外，不少核心中高层也在亲自带队做AI相关项目。
+      </p>
+
+      <p class="para">
+        字节的一位产品经理王岳告诉36氪，他正在内部创业，做一款面向B端客户的AI提效类产品，“公司鼓励大家去做这样的探索”。在立项之初，他们不仅主动抹掉了“设计”和“测试”两个职能，还要向评审会强调，这款产品未来将节省多少人力成本。王岳的另一位同事在开发AI客服的Agent产品，其2026年的OKR就是“帮助公司裁掉xx%的客服”。
+      </p>
+
+      <p class="para">
+        如今，这样的项目，在每家大厂都有十余个或数十个小团队在做。“有时候会几个团队做同一个方向，谁跑出来了，公司就集中资源推谁。”——一场新的赛马开始了。
+      </p>
+
+      <p class="para">
+        变动的除了业务重心，还有组织形态，比如抹去更多中层管理者。
+      </p>
+
+      <p class="para">
+        腾讯从今年起开始推行项目制，弱化管理职级，给负责人恢复专业职级；美团在今年年中盘点时裁掉了一些L9（事业部总监级），还在近期全面取消X1节点（此前最低的一层管理节点），减少管理层级。
+      </p>
+    </section>
+
+    {/* ===== 章节 04 · 就让我们挥别过去 ===== */}
+    <section class="app-layout body chapter-block">
+      <h2 class="chapter reveal">
+        <span class="chapter-no">04</span>
+        就让我们挥别过去
+      </h2>
+
+      <p class="para">
+        AI的巨浪究竟会把人带往何处，多数人都还没有一个“顿悟时刻”。
+      </p>
+
+      <p class="para">
+        离职缓冲期结束前的六月中旬，林越已经在密集推进淘宝、快手和字节的面试。继续“大厂程序员”的职业生涯，仍然是他内心期盼的最优路线。但这些公司的橄榄枝至今没能如愿抛来，“太难了。”林越说。
+      </p>
+
+      <p class="para">
+        “找到一份工作是容易的，但一旦从大厂去了中厂、小厂，你就不可能再回到大厂了。”在林越心里，放弃大厂某种程度意味着永久性跌落，他不愿“退而求其次”。
+      </p>
+
+      <p class="para">
+        也有人放下“大厂执念”。李川从百度离职后的第三天，便无缝入职了一家初创公司。顺其自然地，他的岗位从过去的“前端工程师”变成了“全栈工程师”。这家公司的主力产品是办公类的AI
+        Agent，还给他涨了薪。
+      </p>
+
+      <p class="para">
+        尽管大家都说时代变了、程序员的技能不再可靠，李川仍然有一些“技术憧憬”，希望以技术人员的角色参与到一款被用户喜爱的产品中，而这未必只能在大厂实现。
+      </p>
+
+      <p class="para">
+        从阿里离开后，江灵入职了一家老牌汽车公司。她如今的工作内容不必强行与AI关联，不用再每天焦虑“老板的AI任务能不能完成”，当然也不用再“拼命表演”。江灵最近负责的一个项目9月30日才上线，“这些任务落在我的舒适区，时间又宽裕，人真的会身心愉悦许多。”
+      </p>
+
+      <p class="para">
+        最近，她所在的部门每每放出招聘岗位，“都有一堆什么阿里的人过来面试，疯了一样地往制造业跑。”
+      </p>
+
+      <p class="para">
+        也许程序员群体最终还会留下10%，但苍述不想再找大厂的工作，“去卷成这绝望的10%”。
+      </p>
+
+      <p class="para">
+        5月被美团裁员后，他果断踏上了创业道路。AI浪潮前，他就以副业形式尝试自己做点什么。彼时，只是建社群、兜售一些技能，就让他体会过月入十万的滋味。
+      </p>
+
+      <p class="para">
+        今年三四月时，苍述社群里的一些“学员”，已经踩着浪潮投身AI创业，“开了自己的公司，招了很多人，我还苦哈哈在这上班，这对吗？”他问自己。
+      </p>
+
+      <p class="para">
+        如今，苍述的创业项目是面向海外，围绕罕见病用户的需求开发系统、做独立产品，他也在小红书账号“苍述（戒掉月薪版”与海外社媒上向网友分享进展。主产品之外，他还在多线并行一些小产品，以此保持手感，“一个小工具最多三四天完成，复杂系统可能需要半个月。”——这都远远快于大厂的常规排期节奏。
+      </p>
+
+      <p class="para">
+        AI或许是人类有史以来最强的智力杠杆，它可以把个人能力放大N倍，可以支撑大部分初创产品的落地，也可以让每一个好的idea被快速看见并定价。
+      </p>
+
+      <p class="para">
+        生于2000年的苍述说，自己是一个注定创业的人，但假如没有这次裁员，他可能不会在此刻行动。
+      </p>
+
+      <blockquote class="pull-quote reveal">“公司帮我做了决定。”</blockquote>
+
+      {/* 结尾 · 告别短信里的最后一句 */}
+      <div class="farewell reveal">
+        <p class="farewell-line">“既往不恋，纵情向前”</p>
+        <p class="farewell-sub">
+          这是美团给每位离职员工告别短信中的最后一句话，也是最近许多大厂人离开时会提起的一句话。在AI带来的这场复杂变革里，离开大厂、留在大厂，都无法再延续过去的路径。
+        </p>
+      </div>
+
+      <p class="closing reveal">
+        短暂的“碎”过之后不是躺倒。转行也好，创业也好，<span class="hl"
+          >先接受变化的人或许能先看到不一样的世界。</span
+        >
+      </p>
+
+      <p class="source-note">本文转载自 36氪。</p>
+    </section>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* ===== Hero ===== */
+  .deco-word {
+    position: absolute;
+    top: -1rem;
+    inset-inline-end: -0.5rem;
+    z-index: -1;
+    font-weight: 800;
+    font-size: clamp(4rem, 20vw, 11rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .post-title {
+    font-size: clamp(2rem, 7vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--foreground);
+  }
+  .post-subtitle {
+    margin-top: 0.5rem;
+    font-size: clamp(1.15rem, 4vw, 1.6rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+  }
+
+  /* ===== 编者按（博主原话）===== */
+  .editor-note {
+    position: relative;
+    margin-block: 0.5rem 0.5rem;
+    padding: 1.4rem 1.4rem 1.2rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+  .editor-tag {
+    display: inline-block;
+    margin-bottom: 0.7rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .editor-note p {
+    margin: 0;
+    line-height: 1.8;
+    color: var(--foreground);
+  }
+  .editor-note p + p {
+    margin-top: 0.7rem;
+  }
+  .editor-sep {
+    margin-top: 1rem !important;
+    color: var(--muted-foreground) !important;
+    font-size: 0.9rem;
+  }
+  .questions {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 0.75rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 40%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 5%, transparent);
+  }
+  .questions-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .questions-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .questions-list li {
+    padding: 0.35rem 0.8rem;
+    border-radius: 0.55rem;
+    background-color: color-mix(in srgb, var(--muted) 45%, transparent);
+    color: var(--foreground);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .questions-list li:not(:last-child)::after {
+    content: "";
+  }
+
+  /* ===== 正文 ===== */
+  .body {
+    margin-top: 1.5rem;
+  }
+  .para {
+    margin-top: 1.1rem;
+    font-size: 1.02rem;
+    line-height: 1.9;
+    color: var(--foreground);
+    opacity: 0.95;
+  }
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .text-accent {
+    color: var(--accent);
+  }
+  .num {
+    color: var(--accent);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 章节 */
+  .chapter-block {
+    margin-top: 3rem;
+  }
+  .chapter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+    font-size: clamp(1.35rem, 4.5vw, 1.7rem);
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--foreground);
+  }
+  .chapter-no {
+    flex: none;
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 开场场景卡片 */
+  .scene {
+    position: relative;
+    margin-block: 0.5rem 1rem;
+    padding: 1.6rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--muted) 32%, transparent);
+    overflow: hidden;
+  }
+  .scene-label {
+    position: absolute;
+    top: -0.6rem;
+    inset-inline-end: 0.6rem;
+    font-size: clamp(2.5rem, 12vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  .scene-line {
+    margin: 0;
+    position: relative;
+    font-size: clamp(1.3rem, 4.6vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .scene-sub {
+    margin: 0.9rem 0 0;
+    position: relative;
+    color: var(--muted-foreground);
+    line-height: 1.7;
+  }
+
+  /* 金句 */
+  .pull-quote {
+    margin-block: 1.6rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.25rem, 3.8vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  /* 过渡强调句（居中、稍大） */
+  .interlude {
+    margin-block: 1.8rem;
+    text-align: center;
+    font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+    font-weight: 700;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+
+  /* 携程节奏对比 */
+  .contrast {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.9rem;
+    margin-block: 1.4rem;
+  }
+  .contrast-col {
+    flex: 1 1 12rem;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+  }
+  .contrast-col.was {
+    background-color: color-mix(in srgb, var(--muted) 35%, transparent);
+  }
+  .contrast-col.now {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  .contrast-head {
+    display: block;
+    margin-bottom: 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .contrast-col.was .contrast-head {
+    color: var(--muted-foreground);
+  }
+  .contrast-col.now .contrast-head {
+    color: var(--accent);
+  }
+  .contrast-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .contrast-col li {
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  .contrast-col.now li {
+    font-weight: 700;
+  }
+  .contrast-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+
+  /* 硅谷裁员数据网格 */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    margin-block: 1.4rem;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    padding: 1.1rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    background-color: color-mix(in srgb, var(--muted) 28%, transparent);
+    text-align: center;
+  }
+  .stat-src {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--muted-foreground);
+  }
+  .stat-num {
+    font-size: clamp(1.5rem, 6vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-num small {
+    font-size: 0.5em;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--foreground);
+  }
+
+  /* 三级递进：高层 / 中层 / 基层 */
+  .tiers {
+    display: grid;
+    gap: 0.6rem;
+    margin-block: 1.3rem;
+  }
+  .tier {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 0.8rem;
+    border: 1px solid var(--border);
+  }
+  .tier-0 {
+    margin-inline-end: 0;
+    background-color: color-mix(in srgb, var(--accent) 5%, transparent);
+  }
+  .tier-1 {
+    margin-inline: 1rem 0;
+    background-color: color-mix(in srgb, var(--accent) 9%, transparent);
+  }
+  .tier-2 {
+    margin-inline: 2rem 0;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+  .tier-role {
+    flex: none;
+    min-width: 3rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+  .tier-state {
+    font-size: clamp(1.15rem, 4vw, 1.5rem);
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* 数据 + 说明卡片（腾讯 bug 流水线 / 外卖大战） */
+  .fact-card {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-block: 1.4rem;
+    padding: 1.2rem 1.3rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+  .fact-num {
+    flex: none;
+    font-size: clamp(2rem, 9vw, 3rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .fact-num small {
+    font-size: 0.45em;
+    font-weight: 700;
+  }
+  .fact-body {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: var(--foreground);
+  }
+  .fact-body b {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* 结尾告别 */
+  .farewell {
+    margin-block: 1.8rem;
+    padding: 1.6rem 1.5rem;
+    border-radius: 1rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+    text-align: center;
+  }
+  .farewell-line {
+    margin: 0;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: var(--foreground);
+  }
+  .farewell-sub {
+    margin: 0.9rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--muted-foreground);
+    text-align: start;
+  }
+  .closing {
+    margin-top: 1.4rem;
+    font-size: 1.1rem;
+    line-height: 1.85;
+    color: var(--foreground);
+  }
+  .source-note {
+    margin-top: 2.2rem;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  /* ===== 入场动画（仅在用户不偏好减少动效时启用）===== */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
