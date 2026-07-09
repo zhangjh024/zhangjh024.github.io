@@ -23,6 +23,7 @@ import LifeMainQuest from "./_custom/life-main-quest.astro";
 import Notes20260630 from "./_custom/notes-2026-06-30.astro";
 import Half2026 from "./_custom/half-2026.astro";
 import AiLayoffs from "./_custom/ai-layoffs.astro";
+import DiplomaNotPaper from "./_custom/diploma-not-paper.astro";
 import config from "@/config";
 
 export async function getStaticPaths() {
@@ -94,6 +95,7 @@ const customRenderers: Record<string, typeof TenXProgrammer> = {
   "/notes-2026-06-30": Notes20260630,
   "/half-2026": Half2026,
   "/ai-layoffs": AiLayoffs,
+  "/diploma-not-paper": DiplomaNotPaper,
 };
 const CustomPost: typeof TenXProgrammer | undefined =
   customRenderers[getPostSlug(post.id, post.filePath)];

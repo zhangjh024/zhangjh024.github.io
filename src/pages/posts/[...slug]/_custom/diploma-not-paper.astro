@@ -1,0 +1,559 @@
+---
+/**
+ * 《学历真正的含金量，并非是那张纸》的定制设计页（slug: diploma-not-paper）。
+ *
+ * 内容文案取自 src/content/posts/diploma-not-paper.md，原出处为社交媒体评论
+ * （得闲饮茶 · 2024-11-12 · 陕西）。文字一字不增不改，只做排版 / 强调 / 可视化重排：
+ *   - 把一整段跑句拆成可读的「论证节拍」，关键词用 accent 高亮；
+ *   - 「因为……」的三条底气来源做成卡片；
+ *   - 「一次又一次」的两句做成并列块；
+ *   - 「底层逻辑」的三点（极低的筛选成本 / 不仅智商高 / 还具备长期主义的优良品质）做成编号点；
+ *   - 回复里的「阶级电梯」作为收束高亮。
+ * 可视化里出现的每个字都是原文已有的词，标点为可读性所加，未改动任何字词。
+ * SEO / 列表 / RSS / OG 走 md frontmatter；由 [...slug]/index.astro 的注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 「因为……」——三条底气来源（原文逐字）
+const groundings = [
+  "曾经真正毫无保留拼搏过",
+  "测试过自己的深浅",
+  "你对自己有谱",
+];
+
+// 「一次又一次」——两句并列的可贵品质（原文逐字，仅加标点断句）
+const virtues = [
+  "经受一次又一次的诱惑，并且不为所动",
+  "一次又一次放弃眼前，选择长期默默耕耘",
+];
+
+// 陌生领域里也做得好，靠的是这两样（原文逐字）
+const qualities = ["长年累月锻炼出来的一种素质", "一种顽强意志力的体现"];
+
+// 「底层逻辑」——为什么很多岗位要名牌大学生（原文逐字）
+const logic = ["极低的筛选成本", "不仅智商高", "还具备长期主义的优良品质"];
+---
+
+<main id="main-content" data-pagefind-body class="post-diploma mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-7 sm:pt-10 sm:pb-9"
+    >
+      <span aria-hidden="true" class="deco select-none">含金量</span>
+
+      <p class="reveal eyebrow">真正的含金量</p>
+
+      <h1
+        class="reveal title"
+        style={{ viewTransitionName: toTransitionName(title), "--d": "0.05s" }}
+      >
+        学历真正的含金量，<br class="title-br" />并非是<span class="strike"
+          >那张纸</span
+        >
+      </h1>
+
+      <p class="reveal source" style={{ "--d": "0.1s" }}>
+        得闲饮茶 · 2024-11-12 · 陕西
+      </p>
+
+      <div class="reveal datetime" style={{ "--d": "0.14s" }}>
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 而是…… 立论 ===== */}
+      <p class="reveal lead">
+        而是你<span class="hl">数十年如一月</span>、<span class="hl"
+          >孜孜不倦</span
+        >的追求一个目标，并且<span class="hl">完成了、成功了</span>。
+      </p>
+
+      {/* 那种赢的感觉 */}
+      <blockquote class="reveal feel">
+        那种<span class="hl">赢的感觉</span>带给你的人生的<span class="hl"
+          >自信与底气</span
+        >，是<span class="hl">陪伴你一生</span>的。
+      </blockquote>
+
+      {/* ===== 你知道自己的上限 ===== */}
+      <p class="reveal statement">
+        即使你面对不确定的未来，你大概率<span class="hl">知道自己的上限</span>——
+      </p>
+
+      <div class="reason-wrap">
+        <span class="reveal because">因为</span>
+        <div class="reason-grid">
+          {
+            groundings.map((g, i) => (
+              <div class="reason reveal" style={{ "--d": `${0.06 + i * 0.07}s` }}>
+                <span class="reason-no">{`0${i + 1}`}</span>
+                <p class="reason-text">{g}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <p class="reveal punch">这个才是最重要的。</p>
+
+      {/* ===== 可贵的品质 —— 一次又一次 ===== */}
+      <div class="virtues">
+        {
+          virtues.map((v, i) => (
+            <p class="virtue reveal" style={{ "--d": `${0.05 + i * 0.08}s` }}>
+              <span class="virtue-mark" aria-hidden="true">
+                {i === 0 ? "一" : "又"}
+              </span>
+              <span
+                class="virtue-text"
+                set:html={v
+                  .replace("一次又一次", '<span class="hl">一次又一次</span>')
+                  .replace("不为所动", '<span class="hl">不为所动</span>')
+                  .replace(
+                    "长期默默耕耘",
+                    '<span class="hl">长期默默耕耘</span>'
+                  )}
+              />
+            </p>
+          ))
+        }
+      </div>
+
+      <p class="reveal punch">这是一种<span class="hl">非常可贵的品质</span>，这个最重要的。</p>
+
+      {/* ===== 完全陌生的领域 ===== */}
+      <blockquote class="reveal feel">
+        即把你放在一个<span class="hl">完全陌生的领域</span>，你依然可以做的很好——<span
+          class="hl">只要给你时间</span
+        >。
+      </blockquote>
+
+      <div class="quality-tags reveal">
+        {qualities.map(q => <span class="quality-tag">{q}</span>)}
+      </div>
+
+      {/* ===== 底层逻辑 ===== */}
+      <p class="reveal logic-intro">
+        这就是为什么很多岗位要<span class="hl">名牌大学生</span>的底层逻辑——
+      </p>
+      <ul class="logic-list">
+        {
+          logic.map((l, i) => (
+            <li class="logic-item reveal" style={{ "--d": `${0.05 + i * 0.07}s` }}>
+              <span class="logic-no">{i + 1}</span>
+              <span class="logic-text">{l}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      {/* ===== 收束：阶级电梯 ===== */}
+      <section class="reveal coda">
+        <div class="coda-steps" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <p class="coda-lead">
+          真正的<span class="hl">阶级电梯</span>并非一纸学历，<br />而是拿到学历<span
+            class="hl">背后需要的那种素质</span
+          >。
+        </p>
+        <p class="coda-sub">
+          这也是拿到学历的人看问题，与拿不到的人看到问题的时候，<span class="hl"
+            >深度不一样</span
+          >。
+        </p>
+      </section>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* 大字用衬线，给论说文一点分量感；正文仍用主题无衬线 */
+  .post-diploma {
+    --serif:
+      Georgia, "Times New Roman", "Songti SC", "STSong", "Noto Serif CJK SC",
+      serif;
+  }
+
+  /* ===== Hero ===== */
+  .deco {
+    position: absolute;
+    top: -0.6rem;
+    inset-inline-end: -0.3rem;
+    z-index: -1;
+    font-weight: 800;
+    font-size: clamp(2.6rem, 13vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+  }
+
+  .title {
+    margin-top: 0.75rem;
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 6.5vw, 3.1rem);
+    font-weight: 800;
+    line-height: 1.28;
+    letter-spacing: 0.01em;
+    color: var(--foreground);
+  }
+  @media (max-width: 640px) {
+    .title-br {
+      display: none;
+    }
+  }
+
+  /* 「那张纸」——被划掉的表象 */
+  .strike {
+    position: relative;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+  }
+  .strike::after {
+    content: "";
+    position: absolute;
+    inset-inline: -0.06em;
+    top: 52%;
+    height: 0.14em;
+    border-radius: 2px;
+    background-color: var(--accent);
+    transform: rotate(-3deg);
+  }
+
+  .source {
+    margin-top: 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+  }
+  .datetime {
+    margin-top: 0.5rem;
+  }
+
+  /* ===== 正文 ===== */
+  .post-body {
+    padding-bottom: 1rem;
+  }
+
+  /* 通用高亮 */
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* 立论：而是…… */
+  .lead {
+    margin-top: 1.9rem;
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 4.4vw, 1.9rem);
+    font-weight: 700;
+    line-height: 1.62;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  /* 那种赢的感觉 / 完全陌生的领域 —— 引用式强调块 */
+  .feel {
+    position: relative;
+    margin: 2rem 0 0;
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    border-inline-start: 3px solid var(--accent);
+    font-size: clamp(1.12rem, 3.6vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.66;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  /* 普通陈述 */
+  .statement,
+  .logic-intro {
+    margin-top: 2rem;
+    font-size: clamp(1.06rem, 3.2vw, 1.22rem);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  /* ===== 因为…… 三条底气 ===== */
+  .reason-wrap {
+    margin-top: 1.1rem;
+  }
+  .because {
+    display: inline-block;
+    margin-bottom: 0.8rem;
+    padding: 0.22rem 0.85rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-indent: 0.12em;
+  }
+  .reason-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+  }
+  @media (max-width: 700px) {
+    .reason-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .reason {
+    position: relative;
+    padding: 1.15rem 1.15rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    overflow: hidden;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .reason:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .reason-no {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    opacity: 0.85;
+  }
+  .reason-text {
+    margin: 0.55rem 0 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--foreground);
+  }
+
+  /* 金句 */
+  .punch {
+    margin-top: 1.6rem;
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 4vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  /* ===== 一次又一次 —— 并列品质 ===== */
+  .virtues {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .virtue {
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 1.05rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 20%, transparent);
+    font-size: clamp(1.02rem, 3vw, 1.15rem);
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .virtue-mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 0.7rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .virtue-text {
+    font-weight: 600;
+  }
+
+  /* ===== 陌生领域后的两样素质 ===== */
+  .quality-tags {
+    margin-top: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .quality-tag {
+    padding: 0.5rem 1rem;
+    border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 7%, transparent);
+    font-size: 0.96rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  /* ===== 底层逻辑 ===== */
+  .logic-list {
+    list-style: none;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .logic-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1.2rem;
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--muted) 24%, transparent);
+  }
+  .logic-no {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .logic-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  /* ===== 收束：阶级电梯 ===== */
+  .coda {
+    position: relative;
+    margin-top: 2.75rem;
+    padding: 1.9rem 1.6rem 2rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+    border-radius: 1.1rem;
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent) 70%
+    );
+    overflow: hidden;
+  }
+  /* 上升的阶梯 —— 呼应「阶级电梯」 */
+  .coda-steps {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.4rem;
+    height: 2.2rem;
+    margin-bottom: 1.1rem;
+  }
+  .coda-steps span {
+    width: 0.7rem;
+    border-radius: 3px 3px 0 0;
+    background-color: var(--accent);
+  }
+  .coda-steps span:nth-child(1) {
+    height: 30%;
+    opacity: 0.4;
+  }
+  .coda-steps span:nth-child(2) {
+    height: 52%;
+    opacity: 0.6;
+  }
+  .coda-steps span:nth-child(3) {
+    height: 74%;
+    opacity: 0.8;
+  }
+  .coda-steps span:nth-child(4) {
+    height: 100%;
+  }
+  .coda-lead {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.35rem, 4.6vw, 1.95rem);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .coda-sub {
+    margin: 1.1rem 0 0;
+    font-size: clamp(1rem, 3vw, 1.12rem);
+    font-weight: 500;
+    line-height: 1.72;
+    color: var(--muted-foreground);
+    text-wrap: pretty;
+  }
+
+  /* ===== 入场动画（仅在不偏好减少动效时启用，避免初始不可见） ===== */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
