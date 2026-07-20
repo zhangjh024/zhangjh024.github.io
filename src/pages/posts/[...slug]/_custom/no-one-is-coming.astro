@@ -1,0 +1,994 @@
+---
+/**
+ * 《没人会来拯救你》的定制设计页（slug: no-one-is-coming）。
+ *
+ * 内容文案取自 src/content/posts/no-one-is-coming.md（12 条建议 + 结尾补充评论）。
+ * 文字一字不增不改，只做排版 / 强调 / 可视化重排：
+ *   - 开头「26、28、30、32、35、40和45岁」做成年龄时间轴；
+ *   - 01 六个追求做成中性标签，收束到「一个主要优先事项」的实心药丸；
+ *   - 02 四项健康习惯做成勾选卡，「26岁 → 35岁」做成投资箭头；
+ *   - 05 「25岁 / 38岁」做成对照卡；06 「很多人 / 很少有人」做成比例条；
+ *   - 08 「内心平静 / 认可」用字号大小对比；09 大字「不」做成印章；
+ *   - 10 「学习 → 尝试 → 失败」做成步进；11 「日常 + 日常 + … = 人生」做成算式；
+ *   - 12 作为全文收束高亮卡，与标题互相呼应；结尾补充评论作独立附记样式。
+ * 可视化里出现的每个字都是原文已有的词（箭头 / 加号等为装饰符号并 aria-hidden）。
+ * SEO / 列表 / RSS / OG 走 md frontmatter；由 [...slug]/index.astro 的注册表挑选渲染。
+ */
+import type { CollectionEntry } from "astro:content";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import ShareLinks from "../_components/ShareLinks.astro";
+import AdjacentPostNav from "../_components/AdjacentPostNav.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const { title, pubDatetime, modDatetime, timezone, tags } = post.data;
+
+// 「改变人生最重要的年龄」——原文逐字的七个年龄
+const ages = ["26", "28", "30", "32", "35", "40", "45"];
+
+// 01 同时追求的所有东西（原文逐字）
+const pursuits = ["事业", "金钱", "伴侣", "生意", "情感治愈", "运动"];
+
+// 02 健康四件事（原文逐字，去句号作清单呈现）
+const habits = ["睡眠7小时", "规律运动", "吃营养食物", "定期体检"];
+
+// 10 经验三步（原文逐字，去句号作步进呈现）
+const expSteps = ["学习", "尝试", "失败"];
+---
+
+<main id="main-content" data-pagefind-body class="post-noone mt-6 sm:mt-8">
+  <article>
+    {/* ===== Hero ===== */}
+    <header
+      class="app-layout relative isolate overflow-hidden pt-6 pb-2 sm:pt-10"
+    >
+      <span aria-hidden="true" class="deco select-none">12</span>
+
+      <h1
+        class="reveal title"
+        style={{ viewTransitionName: toTransitionName(title) }}
+      >
+        没人会来拯救<span class="you">你</span>
+      </h1>
+
+      <div class="reveal datetime" style={{ "--d": "0.06s" }}>
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      </div>
+
+      <p class="reveal ages-lead" style={{ "--d": "0.1s" }}>
+        改变人生最重要的年龄是<span class="hl"
+          >26、28、30、32、35、40和45岁</span
+        >。
+      </p>
+
+      <div class="reveal ages" aria-hidden="true" style={{ "--d": "0.16s" }}>
+        {
+          ages.map(a => (
+            <span class="age">
+              <span class="age-num">{a}</span>
+              <span class="age-dot" />
+            </span>
+          ))
+        }
+      </div>
+
+      <p class="reveal call" style={{ "--d": "0.22s" }}>
+        如果你正处于这些年龄，请做<span class="hl">这12件事</span>：
+      </p>
+    </header>
+
+    <div class="app-layout post-body">
+      {/* ===== 01 停止同时追求所有东西 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">01</p>
+        <h2 id="rule-1" class="item-title">停止同时追求所有东西。</h2>
+        <ul class="pursuits">
+          {pursuits.map(p => <li class="pursuit">{p}</li>)}
+        </ul>
+        <p class="para">
+          同时追求所有目标通常不是成功，而是<span class="hl">筋疲力尽</span>。
+        </p>
+        <p class="punch">
+          为人生的每个阶段选择<span class="focus-one">一个主要优先事项</span>。
+        </p>
+      </section>
+
+      {/* ===== 02 开始将健康视为一种投资 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">02</p>
+        <h2 id="rule-2" class="item-title">开始将健康视为一种投资。</h2>
+        <ul class="habits">
+          {
+            habits.map(h => (
+              <li class="habit">
+                <span class="habit-check" aria-hidden="true" />
+                {h}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="invest">
+          <div class="invest-flow" aria-hidden="true">
+            <span class="invest-age">26岁</span>
+            <span class="invest-arrow"></span>
+            <span class="invest-age is-late">35岁</span>
+          </div>
+          <p class="invest-text">
+            你<span class="hl">35岁</span>时的身体是<span class="hl">26岁</span
+            >决定的结果。
+          </p>
+        </div>
+      </section>
+
+      {/* ===== 03 不要等到有信心才行动 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">03</p>
+        <h2 id="rule-3" class="item-title">不要等到有信心才行动。</h2>
+        <p class="para">很多人认为：</p>
+        <blockquote class="belief">'当我变好了，我就开始。'</blockquote>
+        <p class="turn">但事实是...</p>
+        <p class="punch">
+          那些优秀的人之所以优秀，正是因为他们有勇气在<span class="hl"
+            >还没准备好时就开始了</span
+          >。
+        </p>
+      </section>
+
+      {/* ===== 04 学习一项能让你获得更高报酬的技能 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">04</p>
+        <h2 id="rule-4" class="item-title">
+          学习一项能让你获得更高报酬的技能。
+        </h2>
+        <p class="para">不仅仅是工作。</p>
+        <p class="para">提升你的价值。</p>
+        <p class="callout">
+          因为企业支付的是你创造的<span class="hl">价值</span
+          >，而不是你看起来多<span class="dim">忙</span>。
+        </p>
+      </section>
+
+      {/* ===== 05 停止比较你人生的时间表 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">05</p>
+        <h2 id="rule-5" class="item-title">停止比较你人生的时间表。</h2>
+        <div class="tp">
+          <div class="tp-card">
+            <span class="tp-age" aria-hidden="true">25</span>
+            <p class="tp-text">有人25岁就结婚了。</p>
+          </div>
+          <div class="tp-card">
+            <span class="tp-age" aria-hidden="true">38</span>
+            <p class="tp-text">有人38岁才找到理想工作。</p>
+          </div>
+        </div>
+        <p class="punch">
+          没有比赛。<br />只有<span class="hl">不同的人生旅程</span>。
+        </p>
+      </section>
+
+      {/* ===== 06 减少用于身份象征的开支 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">06</p>
+        <h2 id="rule-6" class="item-title">减少用于身份象征的开支。</h2>
+        <div class="wealth">
+          <div class="w-row">
+            <p class="w-line">
+              <span class="w-who">很多人</span>看起来很富有。
+            </p>
+            <span class="w-bar many" aria-hidden="true"></span>
+          </div>
+          <div class="w-row">
+            <p class="w-line">
+              <span class="w-who is-few">很少有人</span>真正拥有财富。
+            </p>
+            <span class="w-bar few" aria-hidden="true"></span>
+          </div>
+        </div>
+        <p class="punch">不要混淆这两件事。</p>
+      </section>
+
+      {/* ===== 07 建立健康的关系 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">07</p>
+        <h2 id="rule-7" class="item-title">建立健康的关系。</h2>
+        <div class="relation">
+          <p class="rel-good">对的伴侣让你<span class="hl">成长</span>。</p>
+          <p class="rel-bad">不会让你迷失自我。</p>
+        </div>
+      </section>
+
+      {/* ===== 08 停止寻求认可 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">08</p>
+        <h2 id="rule-8" class="item-title">停止寻求认可。</h2>
+        <p class="para">越成熟你就会越明白...</p>
+        <p class="scale-line">
+          <span class="peace">内心平静</span>远比<span class="approval"
+            >认可</span
+          >更有价值。
+        </p>
+      </section>
+
+      {/* ===== 09 要有勇气说'不' ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">09</p>
+        <h2 id="rule-9" class="item-title">要有勇气说'不'。</h2>
+        <div class="sayno">
+          <span class="no-mark" aria-hidden="true">不</span>
+          <div class="sayno-body">
+            <p class="para">并非所有机会都是祝福。</p>
+            <p class="para">并非所有邀请都需要接受。</p>
+            <p class="punch">
+              专注也意味着要有勇气<span class="hl">拒绝</span>。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 10 开始积累经验，而不仅仅是金钱 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">10</p>
+        <h2 id="rule-10" class="item-title">开始积累经验，而不仅仅是金钱。</h2>
+        <div class="exp">
+          {
+            expSteps.map((s, i) => (
+              <Fragment>
+                <span class="exp-step">{s}</span>
+                {i < expSteps.length - 1 && (
+                  <span class="exp-arrow" aria-hidden="true">
+                    →
+                  </span>
+                )}
+              </Fragment>
+            ))
+          }
+        </div>
+        <p class="punch">
+          这一切都变成了<span class="hl">没人能从你身上偷走的资本</span>。
+        </p>
+      </section>
+
+      {/* ===== 11 不要等你的人生改变 ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">11</p>
+        <h2 id="rule-11" class="item-title">不要等你的人生改变。</h2>
+        <p class="punch">改变你的日常。</p>
+        <p class="para">
+          因为你的人生是你<span class="hl">每天重复的日常</span>的总和。
+        </p>
+        <div class="days" aria-hidden="true">
+          <span class="day">日常</span>
+          <span class="day-op">+</span>
+          <span class="day">日常</span>
+          <span class="day-op">+</span>
+          <span class="day">日常</span>
+          <span class="day-op">+</span>
+          <span class="day-more">⋯</span>
+          <span class="day-op is-eq">=</span>
+          <span class="day-sum">人生</span>
+        </div>
+      </section>
+
+      {/* ===== 12 记住一件事（收束） ===== */}
+      <section class="item reveal">
+        <p class="item-no" aria-hidden="true">12</p>
+        <h2 id="rule-12" class="item-title">记住一件事。</h2>
+        <div class="finale">
+          <p class="finale-lead">
+            没人会来拯救<span class="you2">你</span>的人生。
+          </p>
+          <p class="finale-sub">他人可以支持你。</p>
+          <p class="finale-end">
+            但改变的决定总是从<span class="hl">你自己</span>开始。
+          </p>
+        </div>
+      </section>
+
+      {/* ===== 附记：关于第12点的补充 ===== */}
+      <aside class="afterword reveal">
+        <p class="af-quote">'没人会来拯救你'，第12点这样说。</p>
+        <p class="af-body">
+          这是真的。但决定改变还不够。做出决定的大脑是由<span class="af-k"
+            >习惯</span
+          >、<span class="af-k">恐惧</span>和<span class="af-k">模式</span
+          >塑造的，即使你认为自己在控制，它们仍在起作用。
+        </p>
+      </aside>
+    </div>
+
+    {/* ===== 尾部：标签 / 分享 / 相邻文章 ===== */}
+    <div class="app-layout">
+      <hr class="border-border my-8 border-dashed" />
+
+      <ul class="mb-8 flex flex-wrap gap-4">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      </ul>
+
+      <ShareLinks />
+
+      <hr class="border-border my-8 border-dashed" />
+
+      <AdjacentPostNav {prevPost} {nextPost} />
+    </div>
+  </article>
+</main>
+
+<style>
+  /* 大字用衬线，给箴言体一点分量感；正文仍用主题无衬线 */
+  .post-noone {
+    --serif:
+      Georgia, "Times New Roman", "Songti SC", "STSong", "Noto Serif CJK SC",
+      serif;
+  }
+
+  /* ===== Hero ===== */
+  .deco {
+    position: absolute;
+    top: -2rem;
+    inset-inline-end: -0.75rem;
+    z-index: -1;
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(7rem, 32vw, 14rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  .title {
+    font-family: var(--serif);
+    font-size: clamp(2.1rem, 8vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    color: var(--foreground);
+  }
+
+  /* 标题里的「你」——全文的答案落点 */
+  .you {
+    position: relative;
+    color: var(--accent);
+  }
+  .you::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0.04em;
+    bottom: 0.02em;
+    height: 0.1em;
+    border-radius: 2px;
+    background-color: var(--accent);
+    opacity: 0.85;
+    transform: rotate(-2deg);
+  }
+
+  .datetime {
+    margin-top: 0.9rem;
+  }
+
+  /* 通用高亮 / 弱化 */
+  .hl {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .dim {
+    color: var(--muted-foreground);
+    font-weight: 700;
+  }
+
+  /* 年龄时间轴 */
+  .ages-lead {
+    margin-top: 2.1rem;
+    font-family: var(--serif);
+    font-size: clamp(1.12rem, 3.6vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.65;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .ages {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.3rem;
+    max-width: 36rem;
+    padding-inline: 0.2rem;
+  }
+  .ages::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0.25rem;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in srgb, var(--accent) 45%, var(--border)) 12%,
+      color-mix(in srgb, var(--accent) 45%, var(--border)) 88%,
+      transparent
+    );
+  }
+  .age {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .age-num {
+    font-family: var(--serif);
+    font-size: clamp(0.95rem, 3vw, 1.2rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--foreground);
+  }
+  .age-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+
+  .call {
+    margin-top: 2.3rem;
+    font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  /* ===== 小节骨架 ===== */
+  .post-body {
+    padding-bottom: 1rem;
+  }
+  .item {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px dashed var(--border);
+  }
+  .item:first-of-type {
+    margin-top: 1.2rem;
+    padding-top: 1.4rem;
+    border-top: 0;
+  }
+  .item-no {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .item-no::after {
+    content: "";
+    width: 2.4rem;
+    height: 2px;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .item-title {
+    margin-top: 0.55rem;
+    font-family: var(--serif);
+    font-size: clamp(1.32rem, 4.6vw, 1.8rem);
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  .para {
+    margin-top: 1.1rem;
+    font-size: clamp(1rem, 3vw, 1.12rem);
+    line-height: 1.85;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .punch {
+    margin-top: 1.35rem;
+    font-family: var(--serif);
+    font-size: clamp(1.12rem, 3.6vw, 1.42rem);
+    font-weight: 700;
+    line-height: 1.62;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .callout {
+    margin-top: 1.4rem;
+    padding: 0.95rem 1.25rem;
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.45rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    font-size: clamp(1.04rem, 3.2vw, 1.2rem);
+    font-weight: 600;
+    line-height: 1.75;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  /* ===== 01 六个追求 → 一个优先事项 ===== */
+  .pursuits {
+    list-style: none;
+    margin: 1.3rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+  .pursuit {
+    padding: 0.45rem 0.95rem;
+    border: 1px dashed var(--border);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--muted) 30%, transparent);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .focus-one {
+    display: inline-block;
+    padding: 0.08em 0.5em;
+    border-radius: 0.5em;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-weight: 800;
+  }
+
+  /* ===== 02 健康清单 + 26→35 ===== */
+  .habits {
+    list-style: none;
+    margin: 1.3rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .habit {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--foreground);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .habit:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .habit-check {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 2px solid var(--accent);
+    border-radius: 0.35rem;
+  }
+  .habit-check::after {
+    content: "";
+    width: 0.5rem;
+    height: 0.28rem;
+    border-left: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  .invest {
+    margin-top: 1.4rem;
+    padding: 1.3rem 1.3rem 1.4rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: 1rem;
+    background: linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent) 70%
+    );
+  }
+  .invest-flow {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .invest-age {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 6vw, 2.3rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .invest-age.is-late {
+    color: var(--foreground);
+  }
+  .invest-arrow {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .invest-arrow::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: 0;
+    top: 50%;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-top: 2px solid color-mix(in srgb, var(--accent) 75%, transparent);
+    border-right: 2px solid color-mix(in srgb, var(--accent) 75%, transparent);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  .invest-text {
+    margin-top: 0.9rem;
+    font-size: clamp(1.02rem, 3.2vw, 1.18rem);
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+
+  /* ===== 03 信心 ===== */
+  .belief {
+    margin-top: 1.15rem;
+    display: inline-block;
+    padding: 0.9rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem 1rem 1rem 0.25rem;
+    background-color: color-mix(in srgb, var(--muted) 26%, transparent);
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .turn {
+    margin-top: 1.4rem;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+  }
+  .turn + .punch {
+    margin-top: 0.55rem;
+  }
+
+  /* ===== 05 时间表对照 ===== */
+  .tp {
+    margin-top: 1.3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+  @media (max-width: 560px) {
+    .tp {
+      grid-template-columns: 1fr;
+    }
+  }
+  .tp-card {
+    position: relative;
+    overflow: hidden;
+    padding: 1.05rem 1.15rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .tp-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .tp-age {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.9;
+  }
+  .tp-text {
+    margin-top: 0.6rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  /* ===== 06 多与少的比例条 ===== */
+  .wealth {
+    margin-top: 1.3rem;
+    display: grid;
+    gap: 1.05rem;
+  }
+  .w-line {
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+  .w-who {
+    margin-inline-end: 0.15rem;
+    font-weight: 800;
+    color: var(--muted-foreground);
+  }
+  .w-who.is-few {
+    color: var(--accent);
+  }
+  .w-bar {
+    display: block;
+    margin-top: 0.5rem;
+    height: 0.6rem;
+    border-radius: 999px;
+  }
+  .w-bar.many {
+    width: 86%;
+    background-color: color-mix(
+      in srgb,
+      var(--muted-foreground) 28%,
+      transparent
+    );
+  }
+  .w-bar.few {
+    width: 14%;
+    background-color: var(--accent);
+  }
+
+  /* ===== 07 关系 ===== */
+  .relation {
+    margin-top: 1.3rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .rel-good,
+  .rel-bad {
+    padding: 0.95rem 1.2rem;
+    border-inline-start: 3px solid var(--accent);
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+    font-size: clamp(1.02rem, 3vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  .rel-bad {
+    border-inline-start-color: color-mix(
+      in srgb,
+      var(--muted-foreground) 45%,
+      transparent
+    );
+    background-color: color-mix(in srgb, var(--muted) 24%, transparent);
+    color: var(--muted-foreground);
+  }
+
+  /* ===== 08 内心平静 vs 认可 ===== */
+  .scale-line {
+    margin-top: 1.05rem;
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 3.4vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .peace {
+    font-size: 1.5em;
+    color: var(--accent);
+  }
+  .approval {
+    font-size: 0.82em;
+    color: var(--muted-foreground);
+  }
+
+  /* ===== 09 说不 ===== */
+  .sayno {
+    margin-top: 1.35rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+  .no-mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(4.2rem, 16vw, 5.4rem);
+    aspect-ratio: 1;
+    border: 2px solid color-mix(in srgb, var(--accent) 65%, var(--border));
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent);
+    font-family: var(--serif);
+    font-size: clamp(2.3rem, 9vw, 3rem);
+    font-weight: 900;
+    color: var(--accent);
+    transform: rotate(-4deg);
+  }
+  .sayno-body {
+    flex: 1;
+  }
+  .sayno-body .para:first-child {
+    margin-top: 0;
+  }
+
+  /* ===== 10 学习 → 尝试 → 失败 ===== */
+  .exp {
+    margin-top: 1.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .exp-step {
+    padding: 0.6rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    background-color: color-mix(in srgb, var(--muted) 22%, transparent);
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  .exp-arrow {
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* ===== 11 日常算式 ===== */
+  .days {
+    margin-top: 1.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .day {
+    padding: 0.35rem 0.7rem;
+    border: 1px dashed var(--border);
+    border-radius: 0.55rem;
+    background-color: color-mix(in srgb, var(--muted) 18%, transparent);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .day-op,
+  .day-more {
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+  .day-op.is-eq {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .day-sum {
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.6rem;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    font-weight: 800;
+  }
+
+  /* ===== 12 收束 ===== */
+  .finale {
+    position: relative;
+    overflow: hidden;
+    margin-top: 1.4rem;
+    padding: 1.9rem 1.6rem 2rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
+    border-radius: 1.1rem;
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      color-mix(in srgb, var(--accent) 3%, transparent) 70%
+    );
+  }
+  .finale::after {
+    content: "你" / "";
+    position: absolute;
+    inset-inline-end: -0.4rem;
+    bottom: -2.2rem;
+    z-index: 0;
+    font-family: var(--serif);
+    font-size: 7.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .finale-lead {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 5.4vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1.45;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .you2 {
+    color: var(--accent);
+  }
+  .finale-sub {
+    position: relative;
+    z-index: 1;
+    margin: 0.95rem 0 0;
+    font-size: clamp(1rem, 3vw, 1.1rem);
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+  .finale-end {
+    position: relative;
+    z-index: 1;
+    margin: 0.4rem 0 0;
+    font-family: var(--serif);
+    font-size: clamp(1.18rem, 3.9vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+
+  /* ===== 附记 ===== */
+  .afterword {
+    margin-top: 2.6rem;
+    padding: 1.35rem 1.5rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background-color: color-mix(in srgb, var(--muted) 24%, transparent);
+  }
+  .af-quote {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.06rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+  .af-body {
+    margin: 0.8rem 0 0;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--foreground);
+    text-wrap: pretty;
+  }
+  .af-k {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== 入场动画（仅在不偏好减少动效时启用，避免内容初始不可见） ===== */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: reveal-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation-delay: var(--d, 0s);
+    }
+  }
+  @keyframes reveal-up {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
